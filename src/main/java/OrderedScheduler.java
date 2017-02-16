@@ -137,14 +137,11 @@ public class OrderedScheduler {
         }
     }
 
-
-
     //<editor-fold desc="Scheduler thread state variables:">
     private long taskCounter;
     private PriorityQueue<TaskStruct> plannedQueue = new PriorityQueue<>(1024);
     private long pollTimeout; // in millis
     //</editor-fold>
-
 
     private void doPoll() throws InterruptedException {
 
@@ -188,7 +185,6 @@ public class OrderedScheduler {
             }
         } catch (InterruptedException ex) {
             // caught interrupted => we're done
-
             //todo proper reliable shutdown
         } catch (Exception ex) {
             logger.error("doPoll() may throw only interrupted", ex);
