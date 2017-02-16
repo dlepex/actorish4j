@@ -188,6 +188,8 @@ public class OrderedScheduler {
             }
         } catch (InterruptedException ex) {
             // caught interrupted => we're done
+
+            //todo proper reliable shutdown
         } catch (Exception ex) {
             logger.error("doPoll() may throw only interrupted", ex);
         }
