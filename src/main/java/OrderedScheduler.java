@@ -139,7 +139,7 @@ public class OrderedScheduler {
 
     //<editor-fold desc="Scheduler thread state variables:">
     private long taskCounter;
-    private final PriorityQueue<TaskStruct> plannedQueue =  new PriorityQueue<>(512 );
+    private final PriorityQueue<TaskStruct> plannedQueue = new PriorityQueue<>(512);
     private long pollTimeout; // in millis
     //</editor-fold>
 
