@@ -153,7 +153,6 @@ public class OrderedScheduler {
                     plannedQueue.offer(task);
                 } else {
                     logger.warn("plannedQueue exceeded its limit={}", plannedTasksLimit);
-                    return;
                 }
             }
         }
