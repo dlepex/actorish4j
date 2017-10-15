@@ -13,7 +13,8 @@ TaskQueue can be used to implement such concurrent entities as Actors or Agents 
 
 Agents provide access to shared mutable state in async fashion.
 Agents behave like locks for async computations. 
-The implementation is inspired by Elixir Agents and is rather trivial wrapper around the TaskQueue class.
+The implementation is rather trivial wrapper around the TaskQueue class.
+It is inspired by Elixir Agents, see https://hexdocs.pm/elixir/Agent.html
 
 
 #### github.jcext.ExactDateScheduler
