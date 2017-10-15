@@ -46,7 +46,6 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 	 * @param inboundQueueLimit the limit of inbound queue, if reached => RejectedExecutionException
 	 * @param plannedTasksLimit the limit of total tasks awaiting their execution
 	 * @param executor          one thread of this executor is grabbed permanently // todo use thread fac
-	 * @return
 	 */
 	public static ExactDateScheduler create(int inboundQueueLimit, int plannedTasksLimit, Executor executor) {
 		checkArgument(inboundQueueLimit > 0);

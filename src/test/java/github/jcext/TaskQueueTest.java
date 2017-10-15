@@ -26,7 +26,8 @@ public class TaskQueueTest {
 				{1000, 2, 0},
 				{600, 8, 0},
 				{300, 10, 0},
-				{400, 4, 0}
+				{400, 4, 0},
+				{1400, 16, 0}
 		};
 	}
 
@@ -38,7 +39,13 @@ public class TaskQueueTest {
 		}
 		TaskQueue tq = TaskQueue.create(qcapacity);
 		int[] sumBox = new int[1];
-		Function<Integer, TaskQueue.Task> incTask = (n) -> delayedTask(() -> sumBox[0] += n);
+		Function<Integer, TaskQueue.Task> incTask = (n) -> delayedTask(() -> {
+			int z = rng.nextInt(100);
+			sumBox[0] -= z;
+			sumBox[0] -= 2 * z;
+			sumBox[0] += n;
+			sumBox[0] += 3 * z;
+		});
 		CountDownLatch latch = new CountDownLatch(nproducers);
 		AtomicReference<Exception> threadErr = new AtomicReference<>();
 
@@ -83,28 +90,27 @@ public class TaskQueueTest {
 	@Test
 	void testResultCalulation() throws Exception {
 		TaskQueue tq = TaskQueue.create(10);
-		Optional<CompletionStage<Integer>> opt =  tq.tryEnqueueWithResult(() -> CompletableFuture.supplyAsync(() -> 10));
+		Optional<CompletionStage<Integer>> opt = tq.tryEnqueueWithResult(() -> CompletableFuture.supplyAsync(() -> 10));
 		assertTrue(opt.isPresent());
 		assertEquals(opt.get().toCompletableFuture().get(), new Integer(10));
 	}
 
-	private static final RuntimeException MyException = new RuntimeException(
-			"Not a failure - just test exceptions.") {
+	private static final RuntimeException MyException = new RuntimeException("Not a failure - just test exceptions.") {
 		@Override
 		public synchronized Throwable fillInStackTrace() {
 			return null;
 		}
 	};
 
-	private ScheduledExecutorService sched = Executors.newScheduledThreadPool(2);
+	private ScheduledExecutorService sched = Executors.newScheduledThreadPool(16);
 	private static final ThreadLocalRandom rng = ThreadLocalRandom.current();
 
 	private TaskQueue.Task delayedTask(Runnable r) {
 		return () -> {
 			CompletableFuture<Void> cf = new CompletableFuture<>();
+			r.run();
 			sched.schedule(() -> {
 				try {
-					r.run();
 					cf.complete(null);
 				} catch (Exception e) {
 					cf.completeExceptionally(e);
