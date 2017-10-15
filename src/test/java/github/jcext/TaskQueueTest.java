@@ -37,7 +37,7 @@ public class TaskQueueTest {
 		if (qcapacity == 0) {
 			qcapacity = 2 * nproducers * max + 1;
 		}
-		TaskQueue tq = TaskQueue.create(qcapacity);
+		TaskQueue tq = TaskQueue.create(TaskQueue.withCapacity(qcapacity));
 		int[] sumBox = new int[1];
 		Function<Integer, TaskQueue.Task> incTask = (n) -> delayedTask(() -> {
 			int z = rng.nextInt(100);
@@ -89,7 +89,7 @@ public class TaskQueueTest {
 
 	@Test
 	void testResultCalulation() throws Exception {
-		TaskQueue tq = TaskQueue.create(10);
+		TaskQueue tq = TaskQueue.create(TaskQueue.withCapacity(10));
 		Optional<CompletionStage<Integer>> opt = tq.tryEnqueueWithResult(() -> CompletableFuture.supplyAsync(() -> 10));
 		assertTrue(opt.isPresent());
 		assertEquals(opt.get().toCompletableFuture().get(), new Integer(10));

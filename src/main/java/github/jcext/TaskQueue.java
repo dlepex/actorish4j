@@ -1,5 +1,6 @@
 package github.jcext;
 
+import com.google.common.base.Preconditions;
 import org.jctools.queues.MpmcArrayQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ import java.util.function.BiConsumer;
  * TaskQueue can be used to implement such concurrent entities as Actors or Agents.
  */
 @SuppressWarnings("WeakerAccess")
-public final class TaskQueue { //TODO this class belongs generic utils package.
+public final class TaskQueue {
 	/**
 	 * Task is considered completed when its CompletionStage is complete.
 	 */
@@ -42,12 +43,32 @@ public final class TaskQueue { //TODO this class belongs generic utils package.
 
 	}
 
+	public static class Conf {
+		public Executor threadPool = ForkJoinPool.commonPool();
+		public int queueCapacity = 0; // less or eq 0 means unlimited
+	}
+
+	public static Conf withCapacity(int queueCap) {
+		Preconditions.checkArgument(queueCap > 0);
+		Conf c = new Conf();
+		c.queueCapacity = queueCap;
+		return c;
+	}
+
+	public static Conf unlimited() {
+		return new Conf();
+	}
+
 	private static final Logger log = LoggerFactory.getLogger(TaskQueue.class);
 	private static final Executor sameThreadExecutor = Runnable::run;
 
 	private final Queue<Task> queue;
 	private final AtomicBoolean planned = new AtomicBoolean();
 	private final Runnable queuePollRunnable;
+
+	public static TaskQueue create(Conf c) {
+		return new TaskQueue(c.threadPool, c.queueCapacity);
+	}
 
 	@SuppressWarnings("unchecked")
 	private TaskQueue(Executor threadPool, int queueCap) {
@@ -63,18 +84,6 @@ public final class TaskQueue { //TODO this class belongs generic utils package.
 	}
 
 	/**
-	 * @param queueCap if zero TaskQueue is unlimited
-	 */
-	public static TaskQueue create(int queueCap) {
-		return create(ForkJoinPool.commonPool(), queueCap);
-	}
-
-	@SuppressWarnings("WeakerAccess")
-	public static TaskQueue create(Executor exec, int queueCap) {
-		return new TaskQueue(exec, queueCap);
-	}
-
-	/**
 	 * @see #tryEnqueue(Task)  if you want boolean result instead of RejectedExecutionException
 	 * @see #tryEnqueueWithResult(TaskWithResult)  if your task has some usefull result of its execution
 	 */
@@ -83,7 +92,6 @@ public final class TaskQueue { //TODO this class belongs generic utils package.
 			throw new RejectedExecutionException("queue overflow");
 		}
 	}
-
 
 	/**
 	 * @return false if queue overflow
@@ -96,7 +104,6 @@ public final class TaskQueue { //TODO this class belongs generic utils package.
 		planExecution(sameThreadExecutor);
 		return true;
 	}
-
 
 	/**
 	 * @return Optional.empty if queue overflow.
@@ -114,7 +121,7 @@ public final class TaskQueue { //TODO this class belongs generic utils package.
 						result.completeExceptionally(ex);
 					}
 				});
-				return twrResult;
+				return twrResult; // Task queue doesn't wait for waitComplete() callback above, only for twrResult itself
 			} catch (Exception e) {
 				result.completeExceptionally(e);
 				return DoneFuture;

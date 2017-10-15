@@ -8,13 +8,12 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * Agents provide access to shared mutable state in async fashion.
- * Agents behave like async locks.
- * It's impossible to get the state of agent synchronously, only thru Future.
+ * When to use Agents: when you need lock-like behaviour for your async computations.
+ * It's impossible to get the state of agent synchronously, only thru the Future.
  * <p>
  * This implementation is inspired by Elixir Agents: https://hexdocs.pm/elixir/Agent.html
  * Clojure Agents are different (more limited), aside from the fact that they can participate in STM
  * <p>
- * When to use Agents: when you need lock-like behaviour for your async computations.
  *
  * @param <S> state type. It's recommended for S to be immutable
  */
@@ -28,7 +27,12 @@ public final class Agent<S> {
 	 */
 	private S state;
 
-	public Agent(TaskQueue q, S state) {
+
+	public static <S> Agent<S> create(TaskQueue.Conf c, S initialState) {
+		return new Agent<>(TaskQueue.create(c), initialState);
+	}
+
+	private Agent(TaskQueue q, S state) {
 		this.q = q;
 		this.state = state;
 	}
@@ -53,7 +57,9 @@ public final class Agent<S> {
 		q.enqueue(TaskQueue.Task.runnable(() -> this.state = modifierFn.apply(this.state)));
 	}
 
-	public <A> CompletionStage<A> getAndUpdateAsync(Function<? super S, ? extends CompletionStage<StateValuePair<S, A>>> asyncModifierFn) {
+	public <A> CompletionStage<A> getAndUpdateAsync(
+			Function<? super S, ? extends CompletionStage<StateValuePair<S, A>>> asyncModifierFn) {
+
 		return q.enqueueWithResult(() -> asyncModifierFn.apply(this.state).thenApply(tuple -> {
 			this.state = tuple.state;
 			return tuple.value;

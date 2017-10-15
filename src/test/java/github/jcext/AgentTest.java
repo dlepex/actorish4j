@@ -10,8 +10,8 @@ import static org.testng.Assert.assertEquals;
 public class AgentTest {
 
 	@Test
-	public void testGetAndUpdateAsync() throws Exception {
-		Agent<String> agent = new Agent<>(TaskQueue.create(0), "");
+	public void testVariousMethods() throws Exception {
+		Agent<String> agent = Agent.create(TaskQueue.unlimited(), "");
 		assertEquals(agent.get().toCompletableFuture().get(), "");
 		agent.update(s -> s + "x");
 		assertEquals(agent.get().toCompletableFuture().get(), "x");
