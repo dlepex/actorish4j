@@ -1,4 +1,8 @@
-import org.junit.Test;
+package github.jcext;
+
+
+
+import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,12 +11,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 
 
-public class OrderedSchedulerTest {
+public class ExactDateSchedulerTest {
 
-    OrderedScheduler sched = OrderedScheduler.create(5_000, 10_000, Executors.newSingleThreadExecutor());
+    ExactDateScheduler sched = ExactDateScheduler.create(5_000, 10_000, Executors.newSingleThreadExecutor());
     ThreadLocalRandom rng = ThreadLocalRandom.current();
 
     @Test
@@ -24,7 +28,7 @@ public class OrderedSchedulerTest {
                 .collect(Collectors.toList());
         CountDownLatch latch = new CountDownLatch(maxTasks);
         AtomicLong aggregateDelay = new AtomicLong();
-        ConcurrentLinkedQueue<OrderedScheduler.Task.Info> infos = new ConcurrentLinkedQueue<>();
+        ConcurrentLinkedQueue<ExactDateScheduler.Task.Info> infos = new ConcurrentLinkedQueue<>();
         dates.forEach(begin -> {
             sched.schedule(begin, info -> {
                 aggregateDelay.addAndGet(info.delay().toMillis());
@@ -33,7 +37,7 @@ public class OrderedSchedulerTest {
             });
         });
         latch.await();
-        OrderedScheduler.Task.Info info, prev = null;
+        ExactDateScheduler.Task.Info info, prev = null;
         System.out.printf("avg_delay_ms=%s total=%s", ((double)aggregateDelay.get())/maxTasks, aggregateDelay);
         while((info = infos.poll()) != null) {
             if (prev != null) {

@@ -4,11 +4,16 @@ apply plugin: 'java'
 repositories {
     jcenter()
 }
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
 
 
 dependencies {
+    compile 'org.jctools:jctools-core:2.1.1'
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
     compile 'org.slf4j:slf4j-api:1.7.21'
-    testCompile 'junit:junit:4.12'
+
+    testCompile 'org.testng:testng:6.10'
 }
 
