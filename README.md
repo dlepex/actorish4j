@@ -11,11 +11,11 @@ Simplest way to use JcExt is thru jitpack.io. For gradle build:
 ```groovy
 	dependencies {
 		compile 'com.github.dlepex:jcext:v0.3'
-		// If you need lock-free queue impl, uncomment the line below:
-		// compile 'org.jctools:jctools-core:2.1.1'
+
+		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
+		// JcExt may use jctools MpmcArrayQueue, if it detects its presence
 	}
 ```
-
 #### Overview
 ##### github.jcext.Enqueuer&lt;T&gt;
 
