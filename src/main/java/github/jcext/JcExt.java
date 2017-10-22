@@ -28,8 +28,9 @@ final class JcExt {
 			// ignored
 		}
 		try {
-			qp = jcToolsPresent ? (JcExtQueueProvider) Class.forName("github.jcext.internal.JcToolsQueueProvider").newInstance() :
-					new JcExtQueueProvider();
+			qp = jcToolsPresent ?
+					(JcExtQueueProvider) Class.forName("github.jcext.internal.JcToolsQueueProvider").newInstance()
+					: new JcExtQueueProvider();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
