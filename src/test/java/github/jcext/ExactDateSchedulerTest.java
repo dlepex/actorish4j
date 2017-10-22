@@ -1,6 +1,7 @@
 package github.jcext;
 
 
+import github.jcext.applications.ExactDateScheduler;
 import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import static org.testng.Assert.assertTrue;
 
 public class ExactDateSchedulerTest {
 
-	ExactDateScheduler sched = ExactDateScheduler.create(5_000, 10_000, Executors.newSingleThreadExecutor());
+	ExactDateScheduler sched = ExactDateScheduler.create(Enqueuer.conf().unbounded(), Timer.defaultInstance(), 10_000);
 	ThreadLocalRandom rng = ThreadLocalRandom.current();
 
 	@Test

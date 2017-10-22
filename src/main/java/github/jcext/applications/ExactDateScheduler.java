@@ -1,18 +1,21 @@
-package github.jcext;
+package github.jcext.applications;
 
+import github.jcext.Enqueuer;
+import github.jcext.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.concurrent.*;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+
 /**
- * The implementation keeps task order in case of equal dates
+ * Experimental, {@link Enqueuer} application to exact-date scheduling.
  */
 @SuppressWarnings("WeakerAccess")
 public final class ExactDateScheduler {  //TODO proper reliable shutdown
@@ -39,32 +42,27 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 		}
 	}
 
-	private final BlockingQueue<TaskStruct> inboundQueue;
+	private final Enqueuer<TaskStruct> inboundEnq;
 	private final int plannedTasksLimit;
+	private final Timer timer;
 
-	/**
-	 * @param inboundQueueLimit the limit of inbound queue, if reached => RejectedExecutionException
-	 * @param plannedTasksLimit the limit of total tasks awaiting their execution
-	 * @param executor          one thread of this executor is grabbed permanently // todo use thread fac
-	 */
-	public static ExactDateScheduler create(int inboundQueueLimit, int plannedTasksLimit, Executor executor) {
-		checkArgument(inboundQueueLimit > 0);
-		checkArgument(plannedTasksLimit > 0);
-		checkArgument(!(executor instanceof ForkJoinPool));
-		return new ExactDateScheduler(new ArrayBlockingQueue<>(inboundQueueLimit), plannedTasksLimit, executor);
+
+	public static ExactDateScheduler create(Enqueuer.Conf c, Timer timer, int plannedTasksLimit) {
+		return new ExactDateScheduler(c, plannedTasksLimit, timer);
 	}
 
-	private ExactDateScheduler(BlockingQueue<TaskStruct> q, int plannedTasksLimit, Executor executor) {
-		this.inboundQueue = q;
+	private ExactDateScheduler(Enqueuer.Conf c, int plannedTasksLimit, Timer timer) {
+		this.inboundEnq = Enqueuer.create(c, this::doPoll);
 		this.plannedTasksLimit = plannedTasksLimit;
-		executor.execute(this::pollingLoop);
+		this.timer = timer;
+		//executor.execute(this::pollingLoop);
 	}
 
 	public void schedule(LocalDateTime beginAt, Task task) throws RejectedExecutionException {
 		checkNotNull(task);
 		checkNotNull(beginAt);
-		if (!inboundQueue.offer(new TaskStruct(beginAt, task))) {
-			throw new RejectedExecutionException("github.jcext.ExactDateScheduler is flooded");
+		if (!inboundEnq.offer(new TaskStruct(beginAt, task))) {
+			throw new RejectedExecutionException("github.jcext.sample.ExactDateScheduler is flooded");
 		}
 	}
 
@@ -149,11 +147,14 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 	private long pollTimeout; // in millis
 	//</editor-fold>
 
-	private void doPoll() throws InterruptedException {
 
+	private static final TaskStruct timeoutSpecialValue = new TaskStruct(null, null);
+
+	private CompletionStage<?> doPoll(Queue<TaskStruct> inboundQueue) {
 		{
-			TaskStruct task = pollTimeout > 0 ? inboundQueue.poll(pollTimeout, TimeUnit.MILLISECONDS) : inboundQueue.poll();
-			if (task != null) {
+			TaskStruct task = inboundQueue.poll();
+
+			if (task != timeoutSpecialValue) {
 				if (plannedQueue.size() < plannedTasksLimit) {
 					task.order = taskCounter++;
 					plannedQueue.offer(task);
@@ -167,13 +168,14 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 			TaskStruct task = plannedQueue.peek();
 			if (task == null) {
 				pollTimeout = 0;
-				return;
+				return null;
 			}
 
 			LocalDateTime now = LocalDateTime.now();
 			pollTimeout = Duration.between(now, task.begin).toMillis();
 			if (pollTimeout > 0) {
-				return;
+				timer.timeout(() -> inboundEnq.offer(timeoutSpecialValue), pollTimeout, TimeUnit.MILLISECONDS);
+				return null;
 			}
 
 			TaskStruct ignored = plannedQueue.poll();
@@ -183,17 +185,4 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 		}
 	}
 
-	private void pollingLoop() {
-		try {
-			for (; ; ) {
-				//TODO proper reliable shutdown
-				doPoll();
-			}
-		} catch (InterruptedException ex) {
-			// caught interrupted => we're done
-
-		} catch (Exception ex) {
-			logger.error("doPoll() may throw only interrupted", ex);
-		}
-	}
 }

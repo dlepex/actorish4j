@@ -15,9 +15,9 @@ import java.util.stream.IntStream;
 import static org.testng.Assert.*;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class TaskQueueTest {
+public class AsyncRunnableQueueTest {
 
-	private static final Logger log = LoggerFactory.getLogger(TaskQueueTest.class);
+	private static final Logger log = LoggerFactory.getLogger(AsyncRunnableQueueTest.class);
 
 	@DataProvider
 	public Object[][] presets() {
@@ -27,7 +27,14 @@ public class TaskQueueTest {
 				{600, 8, 0},
 				{300, 10, 0},
 				{400, 4, 0},
+				{1400, 16, 0},
+				{500, 3, 0},
+				{1000, 2, 0},
+				{600, 8, 0},
+				{300, 10, 0},
+				{400, 4, 0},
 				{1400, 16, 0}
+
 		};
 	}
 
@@ -37,9 +44,9 @@ public class TaskQueueTest {
 		if (qcapacity == 0) {
 			qcapacity = 2 * nproducers * max + 1;
 		}
-		TaskQueue tq = TaskQueue.create(TaskQueue.withCapacity(qcapacity));
+		TaskEnqueuer tq = TaskEnqueuer.create(Enqueuer.conf().capacity(qcapacity));
 		int[] sumBox = new int[1];
-		Function<Integer, TaskQueue.Task> incTask = (n) -> delayedTask(() -> {
+		Function<Integer, AsyncRunnable> incTask = (n) -> delayedTask(() -> {
 			int z = rng.nextInt(100);
 			sumBox[0] -= z;
 			sumBox[0] -= 2 * z;
@@ -52,9 +59,9 @@ public class TaskQueueTest {
 		IntStream.range(0, nproducers).mapToObj(tnum -> new Thread(() -> {
 			try {
 				for (int i = 0; i < max; i++) {
-					tq.enqueue(incTask.apply(i));
+					tq.mustOffer(incTask.apply(i));
 					if (rng.nextDouble() < 0.1) {
-						tq.enqueue(() -> {
+						tq.mustOffer(() -> {
 							throw MyException;
 						});
 					}
@@ -74,7 +81,7 @@ public class TaskQueueTest {
 		}
 
 		CompletableFuture<Integer> cf = new CompletableFuture<>();
-		tq.enqueue(() -> {
+		tq.mustOffer(() -> {
 			cf.complete(sumBox[0]);
 			return CompletableFuture.completedFuture(null);
 		});
@@ -89,8 +96,8 @@ public class TaskQueueTest {
 
 	@Test
 	void testResultCalulation() throws Exception {
-		TaskQueue tq = TaskQueue.create(TaskQueue.withCapacity(10));
-		Optional<CompletionStage<Integer>> opt = tq.tryEnqueueWithResult(() -> CompletableFuture.supplyAsync(() -> 10));
+		TaskEnqueuer tq = TaskEnqueuer.create(Enqueuer.conf().capacity(10));
+		Optional<CompletionStage<Integer>> opt = tq.offerCall(() -> CompletableFuture.supplyAsync(() -> 10));
 		assertTrue(opt.isPresent());
 		assertEquals(opt.get().toCompletableFuture().get(), new Integer(10));
 	}
@@ -105,7 +112,7 @@ public class TaskQueueTest {
 	private ScheduledExecutorService sched = Executors.newScheduledThreadPool(16);
 	private static final ThreadLocalRandom rng = ThreadLocalRandom.current();
 
-	private TaskQueue.Task delayedTask(Runnable r) {
+	private AsyncRunnable delayedTask(Runnable r) {
 		return () -> {
 			CompletableFuture<Void> cf = new CompletableFuture<>();
 			r.run();

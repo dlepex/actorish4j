@@ -20,19 +20,19 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public final class Agent<S> {
 
-	private final TaskQueue q;
+	private final TaskEnqueuer q;
 	/**
 	 * Shared mutable state.
-	 * Non-volatile since all accesses to this field are done inside TaskQueue tasks.
+	 * Non-volatile since all accesses to this field are done inside TaskEnqueuer tasks.
 	 */
 	private S state;
 
 
-	public static <S> Agent<S> create(TaskQueue.Conf c, S initialState) {
-		return new Agent<>(TaskQueue.create(c), initialState);
+	public static <S> Agent<S> create(Enqueuer.Conf c, S initialState) {
+		return new Agent<>(TaskEnqueuer.create(c), initialState);
 	}
 
-	private Agent(TaskQueue q, S state) {
+	private Agent(TaskEnqueuer q, S state) {
 		this.q = q;
 		this.state = state;
 	}
@@ -46,21 +46,24 @@ public final class Agent<S> {
 	}
 
 	public <A> CompletionStage<A> getAsync(Function<? super S, ? extends CompletionStage<A>> asyncMapper) {
-		return q.enqueueWithResult(() -> asyncMapper.apply(state));
+		return q.mustOfferCall(() -> asyncMapper.apply(state));
 	}
 
 	public void updateAsync(Function<? super S, ? extends CompletionStage<? extends S>> asyncModifierFn) {
-		q.enqueue(() -> asyncModifierFn.apply(this.state).thenAccept(newState -> this.state = newState));
+		q.mustOffer(() -> asyncModifierFn.apply(this.state).thenAccept(newState -> this.state = newState));
 	}
 
 	public void update(Function<? super S, ? extends S> modifierFn) {
-		q.enqueue(TaskQueue.Task.runnable(() -> this.state = modifierFn.apply(this.state)));
+		q.mustOffer(() -> {
+			this.state = modifierFn.apply(this.state);
+			return null;
+		});
 	}
 
 	public <A> CompletionStage<A> getAndUpdateAsync(
 			Function<? super S, ? extends CompletionStage<StateValuePair<S, A>>> asyncModifierFn) {
 
-		return q.enqueueWithResult(() -> asyncModifierFn.apply(this.state).thenApply(tuple -> {
+		return q.mustOfferCall(() -> asyncModifierFn.apply(this.state).thenApply(tuple -> {
 			this.state = tuple.state;
 			return tuple.value;
 		}));

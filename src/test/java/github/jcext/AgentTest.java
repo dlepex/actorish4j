@@ -11,7 +11,7 @@ public class AgentTest {
 
 	@Test
 	public void testVariousMethods() throws Exception {
-		Agent<String> agent = Agent.create(TaskQueue.unlimited(), "");
+		Agent<String> agent = Agent.create(Enqueuer.conf().capacity(1000).optimizeFor(Enqueuer.Conf.OptMode.MEMORY), "");
 		assertEquals(agent.get().toCompletableFuture().get(), "");
 		agent.update(s -> s + "x");
 		assertEquals(agent.get().toCompletableFuture().get(), "x");
