@@ -165,7 +165,7 @@ public final class Enqueuer<T> {
 
 		// experimental
 		public Conf disableSameThreadOpt() {
-			return new Conf(threadPool, capacity, name, requireNonNull(optimizeFor), false);
+			return new Conf(threadPool, capacity, name, optimizeFor, false);
 		}
 
 		<T> Queue<T> chooseQueueImpl() {
@@ -203,7 +203,7 @@ public final class Enqueuer<T> {
 		/**
 		 *   This method will be scheduled for execution, only if the queue is not empty.
 		 * <p>
-		 * => At least one queue.poll() must return non-null inside this method body.
+		 * => At least one queue.poll() must return non-null.
 		 * <p>
 		 *    This method will be never called concurrently, UNTIL its resulting CompletionStage is completed.
 		 * It must be non-blocking. <p>
