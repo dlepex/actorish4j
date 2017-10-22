@@ -1,7 +1,6 @@
 package github.jcext;
 
 
-import org.jctools.queues.MpmcArrayQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -179,7 +178,7 @@ public final class Enqueuer<T> {
 				}
 			}
 			if (capacity > 0) { // bounded case
-				return optimizeFor == OptMode.SPEED ? new MpmcArrayQueue<>(capacity) : new LinkedBlockingQueue<>(capacity);
+				return optimizeFor == OptMode.SPEED ? JcExt.createBoundedQueue(capacity) : new LinkedBlockingQueue<>(capacity);
 			} else { // unbounded case:
 				return new ConcurrentLinkedQueue<>();
 			}
@@ -199,15 +198,19 @@ public final class Enqueuer<T> {
 	 * {@link Enqueuer} guarantees that {@link #pollAsync(Queue)} method will never run concurrently.
 	 * @param <T>
 	 */
+	@FunctionalInterface
 	public interface Poller<T> {
 		/**
 		 *   This method will be scheduled for execution, only if the queue is not empty.
 		 * <p>
 		 * => At least one queue.poll() must return non-null.
 		 * <p>
-		 *    This method will be never called concurrently, UNTIL its resulting CompletionStage is completed.
+		 *    This method will be never called concurrently, UNTIL its resultant CompletionStage is completed.
 		 * It must be non-blocking. <p>
 		 * It may return null, which is interpreted as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)}
+		 * <p>
+		 *   Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
+		 *   (i.e. you should not keep/use the queue after the resultant CompletionStage is completed)
 		 */
 		CompletionStage<?> pollAsync(Queue<T> queue);
 

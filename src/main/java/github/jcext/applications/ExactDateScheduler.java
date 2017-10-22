@@ -7,11 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 
 /**
@@ -59,23 +58,23 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 	}
 
 	public void schedule(LocalDateTime beginAt, Task task) throws RejectedExecutionException {
-		checkNotNull(task);
-		checkNotNull(beginAt);
+		Objects.requireNonNull(task);
+		Objects.requireNonNull(beginAt);
 		if (!inboundEnq.offer(new TaskStruct(beginAt, task))) {
 			throw new RejectedExecutionException("github.jcext.sample.ExactDateScheduler is flooded");
 		}
 	}
 
 	public void schedule(LocalDateTime beginAt, Runnable runnable) throws RejectedExecutionException {
-		checkNotNull(runnable);
-		checkNotNull(beginAt);
+		Objects.requireNonNull(runnable);
+		Objects.requireNonNull(beginAt);
 		schedule(beginAt, Task.fromRunnable(runnable));
 	}
 
 	public <T> CompletableFuture<T> schedule(LocalDateTime beginAt, Callable<T> callable)
 			throws RejectedExecutionException {
-		checkNotNull(callable);
-		checkNotNull(beginAt);
+		Objects.requireNonNull(callable);
+		Objects.requireNonNull(beginAt);
 		CompletableFuture<T> result = new CompletableFuture<>();
 		schedule(beginAt, asRunnable(callable, result, ForkJoinPool.commonPool()));
 		return result;

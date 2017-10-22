@@ -25,6 +25,7 @@ public final class TaskEnqueuer {
 	public static TaskEnqueuer create(Enqueuer.Conf c) {
 		return new TaskEnqueuer(c);
 	}
+
 	private static final Logger log = LoggerFactory.getLogger(TaskEnqueuer.class);
 	private final Enqueuer<AsyncRunnable> enq;
 	private final String name;

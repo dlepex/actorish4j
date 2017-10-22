@@ -3,7 +3,7 @@ package github.jcext;
 import java.util.concurrent.CompletionStage;
 
 /**
- * AsyncRunnable is considered complete when the resulting CompletionStage is complete.
+ * AsyncRunnable is considered complete when the resultant CompletionStage is complete.
  * (unlike normal Runnable, which completes when its run() method returns).
  */
 @FunctionalInterface
