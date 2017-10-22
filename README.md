@@ -11,10 +11,13 @@ Simplest way to use JcExt is thru jitpack.io. For gradle build:
 ```groovy
 	dependencies {
 		compile 'com.github.dlepex:jcext:v0.3'
+		// If you need lock-free queue impl, uncomment the line below:
+		// compile 'org.jctools:jctools-core:2.1.1'
 	}
 ```
 
-#### github.jcext.Enqueuer&lt;T&gt;
+#### Overview
+##### github.jcext.Enqueuer&lt;T&gt;
 
 Enqueuer is the most basic form of actor-like entity: it is the queue + associated (non-blocking) single consumer.
 
@@ -22,7 +25,7 @@ All other actor-like entities in this lib are implemented on top of the Enqueuer
 
 So if you want to read some code, read the code of this class first!
 
-#### github.jcext.TaskEnqueuer
+##### github.jcext.TaskEnqueuer
 
 TaskEnqueuer is the Enqueuer that polls and executes async tasks one by one.
 
@@ -31,7 +34,7 @@ TaskEnqueuer guarantees that:
  - Async tasks will NEVER run concurrently i.e. next AsyncRunnable will wait for the completion of the CompletionStage of the previous AsyncRunnable
 
 
-#### github.jcext.Agent
+##### github.jcext.Agent
 
 - Agent implements the specific form of "lock pattern" for async computations which
 need to share a mutable state.
@@ -41,7 +44,7 @@ need to share a mutable state.
 See https://hexdocs.pm/elixir/Agent.html
 
 
-#### github.jcext.applications.ExactDateScheduler
+###### github.jcext.applications.ExactDateScheduler
 
 Schedules task execution at specified LocalDateTime.
 Tasks are executed sequentially one after another, their order is preserved in case of equal begin dates
