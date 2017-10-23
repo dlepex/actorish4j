@@ -4,19 +4,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.*;
 
 
 /**
  * TaskEnqueuer is the {@link Enqueuer} that polls and executes async tasks {@link AsyncRunnable} one by one
- *
+ * <p>
  * TaskEnqueuer guarantees that
  * <ul><li> Async tasks will be executed in the order of their arrival
  * <li> Async tasks will NEVER run concurrently i.e. next AsyncRunnable will wait for the completion of the CompletionStage of the previous AsyncRunnable
  * </ul>
- *
+ * <p>
+ * TaskEnqueuer can be used as the direct replacement for the single-threaded ExecutorService, if you tasks are asynchronous computations. <p>
+ * This class doesn't follow ExecutorService submit()/execute() API deliberately because it can be misused for blocking tasks.
  */
 @SuppressWarnings("WeakerAccess")
 public final class TaskEnqueuer {
@@ -70,7 +70,7 @@ public final class TaskEnqueuer {
 						result.completeExceptionally(ex);
 					}
 				});
-				return acResult; // AsyncRunnable queue doesn't wait for waitComplete() callback above, only for acResult itself
+				return acResult;
 			} catch (Exception e) {
 				result.completeExceptionally(e);
 				return JcExt.doneFuture;
@@ -82,6 +82,7 @@ public final class TaskEnqueuer {
 	public <V> CompletionStage<V> mustOfferCall(AsyncCallable<V> ac) throws RejectedExecutionException {
 		return offerCall(ac).orElseThrow(() -> new RejectedExecutionException(toString()));
 	}
+
 
 	@Override
 	public String toString() {

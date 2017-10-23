@@ -15,9 +15,9 @@ import java.util.stream.IntStream;
 import static org.testng.Assert.*;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class AsyncRunnableQueueTest {
+public class TaskEnqueuerTest {
 
-	private static final Logger log = LoggerFactory.getLogger(AsyncRunnableQueueTest.class);
+	private static final Logger log = LoggerFactory.getLogger(TaskEnqueuerTest.class);
 
 	@DataProvider
 	public Object[][] presets() {
