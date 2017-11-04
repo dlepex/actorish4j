@@ -3,7 +3,7 @@ package github.jcext;
 public abstract class EnqueuerBasedEntity {
 
 	/**
-	 * Current queue size. For logging/monitoring usage only!
+	 * Current queue size, for logging/monitoring usage only.
 	 */
 	public int queueSize() {
 		return enq().queueSize();
