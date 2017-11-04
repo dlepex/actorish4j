@@ -293,17 +293,6 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		private boolean sameThreadOpt = true;
 		private QueueCreator custom;
 
-
-		public void setFrom(Conf c) {
-			this.sameThreadOpt = c.sameThreadOpt;
-			this.useLockFreeQueue = c.useLockFreeQueue;
-			this.threadPool = c.threadPool;
-			this.capacity = c.capacity;
-			this.id = c.id;
-			this.usePreallocatedQueue = c.usePreallocatedQueue;
-			this.custom = c.custom;
-		}
-
 		protected Conf() {
 		}
 
