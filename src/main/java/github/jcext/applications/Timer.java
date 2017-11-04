@@ -1,4 +1,4 @@
-package github.jcext;
+package github.jcext.applications;
 
 
 import java.util.concurrent.Executors;

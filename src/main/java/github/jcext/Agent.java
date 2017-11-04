@@ -89,8 +89,8 @@ public final class Agent<S> extends EnqueuerBasedEntity {
 	}
 
 	@Override
-	Enqueuer<?> enq() {
-		return enq.enq();
+	protected Enqueuer<?> underlyingEnq() {
+		return enq.underlyingEnq();
 	}
 
 	public final static class StateValuePair<S, V> {

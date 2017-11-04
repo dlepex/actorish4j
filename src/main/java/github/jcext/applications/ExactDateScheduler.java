@@ -2,7 +2,6 @@ package github.jcext.applications;
 
 import github.jcext.Enqueuer;
 import github.jcext.JcExt;
-import github.jcext.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

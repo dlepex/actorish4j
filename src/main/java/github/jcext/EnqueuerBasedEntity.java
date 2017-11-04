@@ -1,23 +1,15 @@
 package github.jcext;
 
-public abstract class EnqueuerBasedEntity {
-
-	/**
-	 * Current queue size, for logging/monitoring usage only.
-	 */
-	public int queueSize() {
-		return enq().queueSize();
-	}
-
+abstract class EnqueuerBasedEntity {
 	/**
 	 * User associated id. Can be anything, with good toString() method.
 	 * @see github.jcext.Enqueuer.Conf#setId(Object)
 	 */
 	public Object id() {
-		return enq().id();
+		return underlyingEnq().id();
 	}
 
-	abstract Enqueuer<?> enq();
+	protected abstract Enqueuer<?> underlyingEnq();
 
 	@Override
 	public String toString() {

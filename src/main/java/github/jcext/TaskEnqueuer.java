@@ -57,7 +57,7 @@ public final class TaskEnqueuer extends EnqueuerBasedEntity {
 	}
 
 	/**
-	 * @return false if queue overflow
+	 * @return false if queue overflows
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public boolean offer(AsyncRunnable task) {
@@ -115,7 +115,7 @@ public final class TaskEnqueuer extends EnqueuerBasedEntity {
 	}
 
 	@Override
-	Enqueuer<AsyncRunnable> enq() {
+	protected Enqueuer<AsyncRunnable> underlyingEnq() {
 		return enq;
 	}
 
@@ -144,7 +144,7 @@ public final class TaskEnqueuer extends EnqueuerBasedEntity {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static class Conf extends Enqueuer.Conf {
+	public static class Conf extends Enqueuer.Conf<AsyncRunnable> {
 		private RejectsListener rejectsListener = EmptyListener;
 
 		/**

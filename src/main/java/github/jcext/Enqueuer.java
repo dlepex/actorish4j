@@ -10,9 +10,7 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.*;
 
 import static github.jcext.JcExt.doneFuture;
 import static github.jcext.JcExt.with;
@@ -27,7 +25,7 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * Only poll(), offer() and isEmpty() methods of {@link Queue} are used throughout this library.
  *
- * @param <T>
+ * @param <T> type of queue items
  * @see Poller
  */
 @SuppressWarnings("WeakerAccess")
@@ -53,15 +51,17 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 
 	/**
 	 * Creates new config object with default settings.
+	 *
 	 * @see Enqueuer#create(Poller, Consumer)
 	 */
-	public static Conf newConf() {
-		return new Conf();
+	public static <T> Conf<T> newConf() {
+		return new Conf<>();
 	}
 
 	/**
 	 * The constructor with default configuration: FJP thread pool and bounded queue with {@link Enqueuer#defaultCapacity}.
 	 */
+	@SuppressWarnings("all")
 	public static <T> Enqueuer<T> create(Poller<T> poller) {
 		return create(poller, Conf.Default);
 	}
@@ -69,11 +69,11 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 	/**
 	 * This form of constructor can save you a few lines of code: you don't need to create {@link Conf} object yourself.
 	 */
-	public static <T> Enqueuer<T> create(Poller<T> poller, Consumer<Conf> configInit) {
+	public static <T> Enqueuer<T> create(Poller<T> poller, Consumer<Conf<T>> configInit) {
 		return create(poller, with(newConf(), configInit));
 	}
 
-	public static <T> Enqueuer<T> create(Poller<T> poller, Conf config) {
+	public static <T> Enqueuer<T> create(Poller<T> poller, Conf<T> config) {
 		return new Enqueuer<>(config.chooseQueueImpl(), config.threadPool, config.id, requireNonNull(poller), config.sameThreadOpt);
 	}
 
@@ -94,7 +94,8 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 	}
 
 	/**
-	 * @return false if queue overflow
+	 * @return false if queue overflows
+	 * @see Queue#offer(Object)
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public boolean offer(T t) {
@@ -186,28 +187,23 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		return id;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public int queueSize() {
-		return queue.size();
-	}
-
-	@Override
-	Enqueuer<?> enq() {
+	protected Enqueuer<?> underlyingEnq() {
 		return this;
 	}
 
 
 	/**
 	 * Configuration object.
+	 *
+	 * @param <T> type of queue items
 	 */
-	public static class Conf {
+	public static class Conf<T> {
 
 		private static final Conf Default = new Conf();
 
 		/**
+		 * By default queue is bounded with max size equal to {@link #defaultCapacity}
 		 * @param capacity max queue size.
 		 */
 		public void setBoundedQueue(int capacity) {
@@ -222,8 +218,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * The queue is bounded by default: see {@link #defaultCapacity}.
-		 * And you should prefer bounded queues.
+		 * This option is discouraged. Most users should use bounded queues.
 		 */
 		public void setUnboundedQueue() {
 			this.capacity = 0;
@@ -231,12 +226,16 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 
 		/**
 		 * Optional user associated id.
+		 *
 		 * @param id must have good readable toString() representation
 		 */
 		public void setId(Object id) {
 			this.id = Objects.requireNonNull(id);
 		}
 
+		/**
+		 * Default pool is FJP.
+		 */
 		public void setThreadPool(Executor threadPool) {
 			this.threadPool = Objects.requireNonNull(threadPool);
 		}
@@ -253,34 +252,55 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		/**
 		 * Queue choice option <p>
 		 * Unbounded queue case is always lock-free, it is based on CLQ.
-		 * Bounded queue case is based on LBQ or ABQ (if usePreallocatedQueue).
-		 *
+		 * Bounded queue case is based on LBQ or ABQ (ABQ if usePreallocatedQueue).
+		 * <p>
 		 * If you want bounded queue to be lock-free you must
-		 *  - enable options: usePreallocatedQueue() and useLockFreeQueue()
-		 *  - include org.jctools:jctools-core:2.1.1+ dependency
+		 * <ul><li> enable options: usePreallocatedQueue() and useLockFreeQueue()
+		 * <li> include dependency: org.jctools:jctools-core:2.1.1+ dependency</ul>
 		 */
 		public void useLockFreeQueue() {
 			this.useLockFreeQueue = true;
 		}
 
 		/**
-		 * Use this method only if you understand what you're doing.
+		 * The queue must be thread-safe and define these 3 methods: poll(), offer() and isEmpty(). <p>
+		 * Do not use clever lock-free structures. They are not for you.
+		 * For instance, most JCTools queues will not work with this library.<p>
+		 * Use this method only if you understand what you're doing! <p>
 		 */
-		public void setCustomQueueCreator(QueueCreator c) {
-			this.custom = Objects.requireNonNull(c);
+		public void setCustomQueue(QueueFactory<T> custom) {
+			this.custom = Objects.requireNonNull(custom);
 		}
 
+		/**
+		 * @see #setCustomQueue(QueueFactory)
+		 */
+		public void setCustomQueue(Supplier<? extends Queue<T>> custom) {
+			Objects.requireNonNull(custom);
+			setCustomQueue(ignored -> custom.get());
+		}
 
+		/**
+		 * Use this method if you'd like to gather some stats e.g. max/mean q length, item arrival frequency etc.
+		 * Queue wrapper creates the queue proxy, which must proxy at least these 3 methods: poll(), offer() and isEmpty()
+		 */
+		public void setQueueWrapper(UnaryOperator<Queue<T>> wrapper) {
+			this.wrapper = Objects.requireNonNull(wrapper);
+		}
+
+		/**
+		 * Most users should not be concerned with what this option is doing, the rest may read the code.
+		 */
 		public void disableSameThreadOptimization() {
 			this.sameThreadOpt = false;
 		}
 
 		static {
 			if (smallCapacity < 16) {
-				throw new IllegalStateException("smallCapacity is too small");
+				throw new IllegalStateException("smallCapacity is too small, should be at least 16");
 			}
 			if (defaultCapacity < smallCapacity) {
-				throw new IllegalStateException("defaultCapacity is too small");
+				throw new IllegalStateException("defaultCapacity is too small, should be > smallCapacity == " + smallCapacity);
 			}
 		}
 
@@ -291,22 +311,21 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		private boolean useLockFreeQueue;
 		private boolean usePreallocatedQueue;
 		private boolean sameThreadOpt = true;
-		private QueueCreator custom;
+		private QueueFactory<T> custom;
+		private UnaryOperator<Queue<T>> wrapper;
 
 		protected Conf() {
 		}
 
-		<T> Queue<T> chooseQueueImpl() {
-			QueueCreator custom = this.custom;
+		Queue<T> chooseQueueImpl() {
+			QueueFactory<T> custom = this.custom;
+			int cap = this.capacity;
+			if (custom != null) return wrap(custom.create(cap));
 			boolean usePreallocatedQueue = this.usePreallocatedQueue;
-			int cap = capacity;
-
-			if (custom != null) return custom.create(cap);
 
 			if (usePreallocatedQueue && cap == 0) {
 				throw new IllegalArgumentException("Preallocated unbounded queue is impossible.");
 			}
-
 			if (cap > 0) { // bounded case
 				if (useLockFreeQueue) {
 					if (!JcExt.isUsingJcTools()) {
@@ -316,22 +335,23 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 						throw new IllegalStateException("Enable usePreallocatedQueue() option as well if you want lock-free bounded queue.");
 					}
 				}
-				return usePreallocatedQueue ? JcExt.newPreallocatedQueue(cap) : new LinkedBlockingQueue<>(cap);
+				return wrap(usePreallocatedQueue ? JcExt.newPreallocatedQueue(cap) : new LinkedBlockingQueue<>(cap));
 			} else { // unbounded case:
-				return new ConcurrentLinkedQueue<>();
+				return wrap(new ConcurrentLinkedQueue<>());
 			}
+		}
+
+		private Queue<T> wrap(Queue<T> q) {
+			return wrapper == null ? q : wrapper.apply(q);
 		}
 	}
 
-	public interface QueueCreator {
+
+	public interface QueueFactory<T> {
 		/**
-		 * The queue must define at least 3 methods: poll(), offer() and isEmpty().<p>
-		 * The queue must be thread-safe. The easiest way to achieve this is by using lock (synchronized block etc).<p>
-		 * Do not use clever lock-free structures. They are not for you.
-		 * For instance, most JCTools queues will not work with this library.
 		 *
-		 * @param capacity Bounded queue capacity, if 0 queue is unbounded.
+		 * @param cap bounded queue capacity, if 0 - queue is unbounded.
 		 */
-		<T> Queue<T> create(int capacity);
+		Queue<T> create(int cap);
 	}
 }
