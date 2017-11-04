@@ -1,19 +1,22 @@
 #### Purpose
+
 This small lib provides async/non-blocking actor-like entities.
  
-Due to its simplicity and **tight integration with Java 8 CompletionStage/CompletableFuture API**, JcExt might be  better choice 
-than Akka for cases where you don't need a full Erlang system imitation. 
+Due to its simplicity and **tight integration with Java 8 CompletionStage/CompletableFuture API**, JCExt might be  better choice 
+than Akka for cases where you do not need the full Erlang system imitation. 
 
 Besides one may argue that the untyped nature of Erlang actors is 
 not the best fit for the strictly typed languages like Java.
 
-Simplest way to use JcExt is thru jitpack.io. For gradle build: 
+Simplest way to use JCExt in your project is thru https://jitpack.io
+
+For gradle build: 
 ```groovy
 	dependencies {
 		compile 'com.github.dlepex:jcext:v0.5'
 
 		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
-		// JcExt may use jctools MpmcArrayQueue, if it detects its presence
+		// JCExt may use JCTools MpmcArrayQueue, if it detects its presence
 	}
 ```
 #### Overview
