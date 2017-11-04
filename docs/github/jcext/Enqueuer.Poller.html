@@ -113,8 +113,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>@FunctionalInterface
 public static interface <span class="typeNameLabel">Enqueuer.Poller&lt;T&gt;</span></pre>
-<div class="block">Asynchronous single consumer of queued items.
- <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext"><code>Enqueuer</code></a> guarantees that <a href="../../github/jcext/Enqueuer.Poller.html#pollAsync-java.util.Queue-"><code>pollAsync(Queue)</code></a> method will never run concurrently.</div>
+<div class="block">Asynchronous single consumer of queued items.</div>
 </li>
 </ul>
 </div>
@@ -171,14 +170,14 @@ public static interface <span class="typeNameLabel">Enqueuer.Poller&lt;T&gt;</sp
 <h4>pollAsync</h4>
 <pre>java.util.concurrent.CompletionStage&lt;?&gt;&nbsp;pollAsync(java.util.Queue&lt;<a href="../../github/jcext/Enqueuer.Poller.html" title="type parameter in Enqueuer.Poller">T</a>&gt;&nbsp;queue)</pre>
 <div class="block">This method will be scheduled for execution, only if the queue is not empty.
- At least one queue.poll() must return non-null.
+ It means that at least one queue.poll() must return non-null.
  <p>
- This method will be never called concurrently, UNTIL its resultant CompletionStage is completed.
+ This method will be never called concurrently (with itself), UNTIL its resultant CompletionStage is completed.
  It must be non-blocking. <p>
- It may return null, which is interpreted as <code>CompletableFuture.completedFuture(Object)</code>
+ It may return null, which is interpreted the same as <code>CompletableFuture.completedFuture(Object)</code>
  <p>
  Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
- (i.e. you should not keep/use the queue after the resultant CompletionStage is completed)</div>
+ i.e. you should not keep/use the queue after the resultant CompletionStage is completed</div>
 </li>
 </ul>
 <a name="pollByOne-java.util.function.Function-">

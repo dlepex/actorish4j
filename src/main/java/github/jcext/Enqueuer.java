@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * Enqueuer is the most basic form of actor-like entity: it is the queue + associated single consumer. <p>
  * All Actor-like entities in this library: {@link TaskEnqueuer} {@link Agent}, use Enqueuer to do their job <p>
  * <p>
- * Only poll(), offer() and isEmpty() methods of {@link Queue} are used throughout this library.
+ * Only poll(), offer() and isEmpty() methods of the {@link Queue} interface are used in this class. <p>
  *
  * @param <T> type of queue items
  * @see Poller
@@ -132,7 +132,6 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 
 	/**
 	 * Asynchronous single consumer of queued items.
-	 * {@link Enqueuer} guarantees that {@link #pollAsync(Queue)} method will never run concurrently.
 	 *
 	 * @param <T>
 	 */
@@ -140,14 +139,14 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 	public interface Poller<T> {
 		/**
 		 * This method will be scheduled for execution, only if the queue is not empty.
-		 * At least one queue.poll() must return non-null.
+		 * It means that at least one queue.poll() must return non-null.
 		 * <p>
-		 * This method will be never called concurrently, UNTIL its resultant CompletionStage is completed.
+		 * This method will be never called concurrently (with itself), UNTIL its resultant CompletionStage is completed.
 		 * It must be non-blocking. <p>
-		 * It may return null, which is interpreted as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)}
+		 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)}
 		 * <p>
 		 * Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
-		 * (i.e. you should not keep/use the queue after the resultant CompletionStage is completed)
+		 * i.e. you should not keep/use the queue after the resultant CompletionStage is completed
 		 */
 		CompletionStage<?> pollAsync(Queue<T> queue);
 
