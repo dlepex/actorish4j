@@ -19,5 +19,7 @@ dependencies {
 
 javadoc {
     destinationDir = new File("${projectDir}/docs")
+    options.noTimestamp = true
+    options.memberLevel = JavadocMemberLevel.PUBLIC
 }
 

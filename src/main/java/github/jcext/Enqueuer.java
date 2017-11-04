@@ -289,7 +289,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * Most users should not be concerned with what this option is doing, the rest may read the code.
+		 * Most users should not be concerned with what this option does, the rest may read the code.
 		 */
 		public void disableSameThreadOptimization() {
 			this.sameThreadOpt = false;

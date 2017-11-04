@@ -40,7 +40,7 @@ public final class TaskEnqueuer extends EnqueuerBasedEntity {
 	}
 
 	/**
-	 * This form of constructor can save you a few lines of code: you don't need to create {@link Enqueuer.Conf} object yourself.
+	 * This form of constructor can save you a few lines of code: you don't need to create configuration object yourself.
 	 */
 	public static TaskEnqueuer create(Consumer<TaskEnqueuer.Conf> configInit) {
 		return create(with(newConf(), configInit));
