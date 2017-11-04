@@ -131,7 +131,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 
 
 	/**
-	 * Asynchronous single consumer of queued items.
+	 * Asynchronous single consumer of enqueued items.
 	 *
 	 * @param <T>
 	 */
@@ -142,7 +142,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		 * It means that at least one queue.poll() must return non-null.
 		 * <p>
 		 * This method will NOT be scheduled, UNTIL the resultant CompletionStage of the previous call is completed.
-		 * This property makes it SINGLE consumer i.e. parallel/concurrent polls are impossible. <p>
+		 * This property ensures that concurrent (parallel) polls are impossible and that the poller is really a SINGLE consumer. <p>
 		 * This method must be non-blocking. <p>
 		 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
 		 * <p>
