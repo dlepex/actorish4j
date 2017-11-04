@@ -1,11 +1,10 @@
 package github.jcext;
 
-/**
- * API for reporting/monitoring usage.
- * Stats usage only, never use it for the logic of your App.
- */
 abstract class EnqueuerStats {
 
+	/**
+	 * Stats usage only, never use it for the logic of your App.
+	 */
 	public int queueSize() {
 		return enq().queueSize();
 	}
