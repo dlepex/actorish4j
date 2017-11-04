@@ -24,7 +24,7 @@ Enqueuer is the most basic form of actor-like entity: it is the queue + associat
 
 All other actor-like entities in this lib are implemented on top of the Enqueuer. 
 
-So if you want to read some code, read the code of this class first!
+So if you want to read some code, read the code of this class first.
 
 ##### github.jcext.TaskEnqueuer
 
@@ -53,3 +53,8 @@ See https://hexdocs.pm/elixir/Agent.html
 
 Schedules task execution at specified LocalDateTime.
 Tasks are executed sequentially one after another, their order is preserved in case of equal begin dates
+
+
+#### Javadoc
+
+https://dlepex.github.io/jcext/
