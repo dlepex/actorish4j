@@ -141,9 +141,10 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		 * This method will be scheduled for execution, only if the queue is not empty.
 		 * It means that at least one queue.poll() must return non-null.
 		 * <p>
-		 * This method will be never called concurrently (with itself), UNTIL its resultant CompletionStage is completed.
-		 * It must be non-blocking. <p>
-		 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)}
+		 * This method will NOT be scheduled, UNTIL the resultant CompletionStage of the previous call is completed.
+		 * This property makes it SINGLE consumer i.e. parallel/concurrent polls are impossible. <p>
+		 * This method must be non-blocking. <p>
+		 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
 		 * <p>
 		 * Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
 		 * i.e. you should not keep/use the queue after the resultant CompletionStage is completed
@@ -151,11 +152,17 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		CompletionStage<?> pollAsync(Queue<T> queue);
 
 
+		/**
+		 * Creates Poller that polls by one.
+		 */
 		static <T> Poller<T> pollByOne(Function<T, CompletionStage<?>> receiverFun) {
 			requireNonNull(receiverFun);
 			return q -> receiverFun.apply(q.poll());
 		}
 
+		/**
+		 * Creates Poller that polls by chunk.
+		 */
 		static <T> Poller<T> pollByChunk(int maxChunkSize, Function<List<T>, CompletionStage<?>> receiverFun) {
 			if (maxChunkSize <= 0) throw new IllegalArgumentException();
 			requireNonNull(receiverFun);
@@ -193,7 +200,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 
 
 	/**
-	 * Configuration object.
+	 * Configuration object
 	 *
 	 * @param <T> type of queue items
 	 */
@@ -217,7 +224,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * This option is discouraged. Most users should use bounded queues.
+		 * This option is discouraged, most users should use bounded queues.
 		 */
 		public void setUnboundedQueue() {
 			this.capacity = 0;
@@ -240,7 +247,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * Queue choice option <p>
+		 * Queue choice tweak <p>
 		 * This option is auto-enabled if the setBoundedQueue capacity is less than {@link #smallCapacity};
 		 * It makes no sense for unbounded queue case.
 		 */
@@ -249,7 +256,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * Queue choice option <p>
+		 * Queue choice tweak <p>
 		 * Unbounded queue case is always lock-free, it is based on CLQ.
 		 * Bounded queue case is based on LBQ or ABQ (ABQ if usePreallocatedQueue).
 		 * <p>
@@ -262,6 +269,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
+		 * Most users should be happy with default queues, but if you need something very special... <p>
 		 * The queue must be thread-safe and define these 3 methods: poll(), offer() and isEmpty(). <p>
 		 * Do not use clever lock-free structures. They are not for you.
 		 * For instance, most JCTools queues will not work with this library.<p>
@@ -348,8 +356,7 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 
 	public interface QueueFactory<T> {
 		/**
-		 *
-		 * @param cap bounded queue capacity, if 0 - queue is unbounded.
+		 * @param cap bounded queue capacity, if 0 - queue is unbounded
 		 */
 		Queue<T> create(int cap);
 	}

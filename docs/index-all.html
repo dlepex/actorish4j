@@ -167,7 +167,7 @@
 </dd>
 <dt><a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext"><span class="typeNameLink">Enqueuer.Conf</span></a>&lt;<a href="github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt; - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
-<div class="block">Configuration object.</div>
+<div class="block">Configuration object</div>
 </dd>
 <dt><a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><span class="typeNameLink">Enqueuer.Poller</span></a>&lt;<a href="github/jcext/Enqueuer.Poller.html" title="type parameter in Enqueuer.Poller">T</a>&gt; - Interface in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
@@ -304,9 +304,13 @@
 <div class="block">This method will be scheduled for execution, only if the queue is not empty.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Poller.html#pollByChunk-int-java.util.function.Function-">pollByChunk(int, Function&lt;List&lt;T&gt;, CompletionStage&lt;?&gt;&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates Poller that polls by chunk.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Poller.html#pollByOne-java.util.function.Function-">pollByOne(Function&lt;T, CompletionStage&lt;?&gt;&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates Poller that polls by one.</div>
+</dd>
 </dl>
 <a name="I:R">
 <!--   -->
@@ -340,7 +344,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#setCustomQueue-github.jcext.Enqueuer.QueueFactory-">setCustomQueue(Enqueuer.QueueFactory&lt;T&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
-<div class="block">The queue must be thread-safe and define these 3 methods: poll(), offer() and isEmpty().</div>
+<div class="block">Most users should be happy with default queues, but if you need something very special...</div>
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#setCustomQueue-java.util.function.Supplier-">setCustomQueue(Supplier&lt;? extends Queue&lt;T&gt;&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>&nbsp;</dd>
@@ -364,7 +368,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#setUnboundedQueue--">setUnboundedQueue()</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
-<div class="block">This option is discouraged.</div>
+<div class="block">This option is discouraged, most users should use bounded queues.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Agent.StateValuePair.html#state">state</a></span> - Variable in class github.jcext.<a href="github/jcext/Agent.StateValuePair.html" title="class in github.jcext">Agent.StateValuePair</a></dt>
 <dd>&nbsp;</dd>
@@ -382,7 +386,7 @@
 </dd>
 <dt><a href="github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext"><span class="typeNameLink">TaskEnqueuer.Conf</span></a> - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
-<div class="block">Configuration object.</div>
+<div class="block">Configuration object</div>
 </dd>
 <dt><a href="github/jcext/TaskEnqueuer.RejectsListener.html" title="interface in github.jcext"><span class="typeNameLink">TaskEnqueuer.RejectsListener</span></a> - Interface in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
@@ -410,11 +414,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#useLockFreeQueue--">useLockFreeQueue()</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
-<div class="block">Queue choice option</div>
+<div class="block">Queue choice tweak</div>
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#usePreallocatedQueue--">usePreallocatedQueue()</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
-<div class="block">Queue choice option</div>
+<div class="block">Queue choice tweak</div>
 </dd>
 </dl>
 <a name="I:V">

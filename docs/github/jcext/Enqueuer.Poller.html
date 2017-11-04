@@ -141,11 +141,15 @@ public static interface <span class="typeNameLabel">Enqueuer.Poller&lt;T&gt;</sp
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Poller.html#pollByChunk-int-java.util.function.Function-">pollByChunk</a></span>(int&nbsp;maxChunkSize,
-           java.util.function.Function&lt;java.util.List&lt;T&gt;,java.util.concurrent.CompletionStage&lt;?&gt;&gt;&nbsp;receiverFun)</code>&nbsp;</td>
+           java.util.function.Function&lt;java.util.List&lt;T&gt;,java.util.concurrent.CompletionStage&lt;?&gt;&gt;&nbsp;receiverFun)</code>
+<div class="block">Creates Poller that polls by chunk.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Poller.html#pollByOne-java.util.function.Function-">pollByOne</a></span>(java.util.function.Function&lt;T,java.util.concurrent.CompletionStage&lt;?&gt;&gt;&nbsp;receiverFun)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Poller.html#pollByOne-java.util.function.Function-">pollByOne</a></span>(java.util.function.Function&lt;T,java.util.concurrent.CompletionStage&lt;?&gt;&gt;&nbsp;receiverFun)</code>
+<div class="block">Creates Poller that polls by one.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -172,9 +176,10 @@ public static interface <span class="typeNameLabel">Enqueuer.Poller&lt;T&gt;</sp
 <div class="block">This method will be scheduled for execution, only if the queue is not empty.
  It means that at least one queue.poll() must return non-null.
  <p>
- This method will be never called concurrently (with itself), UNTIL its resultant CompletionStage is completed.
- It must be non-blocking. <p>
- It may return null, which is interpreted the same as <code>CompletableFuture.completedFuture(Object)</code>
+ This method will NOT be scheduled, UNTIL the resultant CompletionStage of the previous call is completed.
+ This property makes it SINGLE consumer i.e. parallel/concurrent polls are impossible. <p>
+ This method must be non-blocking. <p>
+ It may return null, which is interpreted the same as <code>CompletableFuture.completedFuture(Object)</code> (immediate completion)
  <p>
  Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
  i.e. you should not keep/use the queue after the resultant CompletionStage is completed</div>
@@ -187,6 +192,7 @@ public static interface <span class="typeNameLabel">Enqueuer.Poller&lt;T&gt;</sp
 <li class="blockList">
 <h4>pollByOne</h4>
 <pre>static&nbsp;&lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;pollByOne(java.util.function.Function&lt;T,java.util.concurrent.CompletionStage&lt;?&gt;&gt;&nbsp;receiverFun)</pre>
+<div class="block">Creates Poller that polls by one.</div>
 </li>
 </ul>
 <a name="pollByChunk-int-java.util.function.Function-">
@@ -197,6 +203,7 @@ public static interface <span class="typeNameLabel">Enqueuer.Poller&lt;T&gt;</sp
 <h4>pollByChunk</h4>
 <pre>static&nbsp;&lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;pollByChunk(int&nbsp;maxChunkSize,
                                           java.util.function.Function&lt;java.util.List&lt;T&gt;,java.util.concurrent.CompletionStage&lt;?&gt;&gt;&nbsp;receiverFun)</pre>
+<div class="block">Creates Poller that polls by chunk.</div>
 </li>
 </ul>
 </li>
