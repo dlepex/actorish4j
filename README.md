@@ -10,7 +10,7 @@ not the best fit for the strictly typed languages like Java.
 Simplest way to use JcExt is thru jitpack.io. For gradle build: 
 ```groovy
 	dependencies {
-		compile 'com.github.dlepex:jcext:v0.3'
+		compile 'com.github.dlepex:jcext:v0.4'
 
 		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
 		// JcExt may use jctools MpmcArrayQueue, if it detects its presence
