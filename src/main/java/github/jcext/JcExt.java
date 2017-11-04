@@ -24,7 +24,7 @@ public final class JcExt {
 		try {
 			Class.forName("org.jctools.queues.MpmcArrayQueue");
 			jcToolsPresent = true;
-			log.trace("jctools detected, using MpmcArrayQueue instead of ABQ");
+			log.trace("jctools detected");
 		} catch (ClassNotFoundException e) {
 			// ignored
 		}
