@@ -35,16 +35,16 @@ public final class Agent<S> extends EnqueuerBasedEntity {
 		return TaskEnqueuer.newConf();
 	}
 
-	public static <S> Agent<S> create(S initialState, TaskEnqueuer.Conf confInit) {
-		return new Agent<>(initialState, TaskEnqueuer.create(confInit));
+	public static <S> Agent<S> create(S initialState, TaskEnqueuer.Conf config) {
+		return new Agent<>(initialState, TaskEnqueuer.create(config));
 	}
 
 	public static <S> Agent<S> create(S initialState) {
 		return create(initialState, newConf());
 	}
 
-	public static <S> Agent<S> create(S initialState, Consumer<TaskEnqueuer.Conf> confInit) {
-		return create(initialState, with(newConf(), confInit));
+	public static <S> Agent<S> create(S initialState, Consumer<TaskEnqueuer.Conf> configInit) {
+		return create(initialState, with(newConf(), configInit));
 	}
 
 	private Agent(S state, TaskEnqueuer enq) {

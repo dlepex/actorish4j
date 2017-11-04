@@ -18,7 +18,7 @@ Simplest way to use JcExt is thru jitpack.io. For gradle build:
 ```
 #### Overview
 
-##### github.jcext.Enqueuer&lt;T&gt;
+##### github.jcext.Enqueuer&lt;T&gt; https://dlepex.github.io/jcext/github/jcext/Enqueuer.html
 
 Enqueuer is the most basic form of actor-like entity: it is the queue + associated asynchronous consumer aka  **Poller**.
 
@@ -26,7 +26,9 @@ All other actor-like entities in this lib are implemented on top of the Enqueuer
 
 So if you want to read some code, read the code of this class first.
 
-##### github.jcext.TaskEnqueuer
+
+
+##### github.jcext.TaskEnqueuer https://dlepex.github.io/jcext/github/jcext/TaskEnqueuer.html
 
 TaskEnqueuer is the Enqueuer with the predefined poller, which polls and executes async tasks one by one.
 
@@ -39,7 +41,8 @@ TaskEnqueuer guarantees that:
  - Async tasks will NEVER run concurrently i.e. next AsyncRunnable will wait for the completion of the CompletionStage of the previous AsyncRunnable
 
 
-##### github.jcext.Agent
+
+##### github.jcext.Agent https://dlepex.github.io/jcext/github/jcext/Agent.html
 
 - **Agent** implements the specific form of "lock pattern" for async computations which
 need to share a mutable state.
@@ -47,6 +50,7 @@ need to share a mutable state.
 (which in turn is the wrapper around Enqueuer)
 
 See https://hexdocs.pm/elixir/Agent.html
+
 
 
 ###### github.jcext.applications.ExactDateScheduler
