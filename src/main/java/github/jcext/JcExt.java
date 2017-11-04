@@ -7,9 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 
-final class JcExt {
+public final class JcExt {
 	private static final Logger log = LoggerFactory.getLogger(TaskEnqueuer.class);
 	static final CompletableFuture<Void> doneFuture = CompletableFuture.completedFuture(null);
 
@@ -31,12 +32,23 @@ final class JcExt {
 			qp = jcToolsPresent ?
 					(JcExtQueueProvider) Class.forName("github.jcext.internal.JcToolsQueueProvider").newInstance()
 					: new JcExtQueueProvider();
+
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	static <T> Queue<T> createBoundedQueue(int cap) {
-		return qp.createBoundedQueue(cap);
+	static <T> Queue<T> newPreallocatedQueue(int cap) {
+		return qp.newPreallocatedQueue(cap);
+	}
+
+	static boolean isUsingJcTools() {
+		return qp.getClass() != JcExtQueueProvider.class;
+	}
+
+	public static <T> T with(T t, Consumer<? super T> scope) {
+		scope.accept(t);
+		return t;
 	}
 }

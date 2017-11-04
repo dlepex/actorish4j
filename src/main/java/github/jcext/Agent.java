@@ -2,8 +2,10 @@ package github.jcext;
 
 
 import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static github.jcext.JcExt.with;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
@@ -18,22 +20,33 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * @param <S> state type. It's recommended for S to be immutable
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public final class Agent<S> {
+public final class Agent<S> extends EnqueuerStats {
 
-	private final TaskEnqueuer q;
+	private final TaskEnqueuer enq;
 	/**
 	 * Shared mutable state.
 	 * Non-volatile since all accesses to this field are done inside TaskEnqueuer tasks.
 	 */
 	private S state;
 
-
-	public static <S> Agent<S> create(Enqueuer.Conf c, S initialState) {
-		return new Agent<>(TaskEnqueuer.create(c), initialState);
+	public static TaskEnqueuer.Conf newConf() {
+		return TaskEnqueuer.newConf();
 	}
 
-	private Agent(TaskEnqueuer q, S state) {
-		this.q = q;
+	public static <S> Agent<S> create(S initialState, TaskEnqueuer.Conf confInit) {
+		return new Agent<>(initialState, TaskEnqueuer.create(confInit));
+	}
+
+	public static <S> Agent<S> create(S initialState) {
+		return create(initialState, newConf());
+	}
+
+	public static <S> Agent<S> create(S initialState, Consumer<TaskEnqueuer.Conf> confInit) {
+		return create(initialState, with(newConf(), confInit));
+	}
+
+	private Agent(S state, TaskEnqueuer enq) {
+		this.enq = enq;
 		this.state = state;
 	}
 
@@ -46,15 +59,15 @@ public final class Agent<S> {
 	}
 
 	public <A> CompletionStage<A> getAsync(Function<? super S, ? extends CompletionStage<A>> asyncMapper) {
-		return q.mustOfferCall(() -> asyncMapper.apply(state));
+		return enq.mustOfferCall(() -> asyncMapper.apply(state));
 	}
 
 	public void updateAsync(Function<? super S, ? extends CompletionStage<? extends S>> asyncModifierFn) {
-		q.mustOffer(() -> asyncModifierFn.apply(this.state).thenAccept(newState -> this.state = newState));
+		enq.mustOffer(() -> asyncModifierFn.apply(this.state).thenAccept(newState -> this.state = newState));
 	}
 
 	public void update(Function<? super S, ? extends S> modifierFn) {
-		q.mustOffer(() -> {
+		enq.mustOffer(() -> {
 			this.state = modifierFn.apply(this.state);
 			return null;
 		});
@@ -63,7 +76,7 @@ public final class Agent<S> {
 	public <A> CompletionStage<A> getAndUpdateAsync(
 			Function<? super S, ? extends CompletionStage<StateValuePair<S, A>>> asyncModifierFn) {
 
-		return q.mustOfferCall(() -> asyncModifierFn.apply(this.state).thenApply(tuple -> {
+		return enq.mustOfferCall(() -> asyncModifierFn.apply(this.state).thenApply(tuple -> {
 			this.state = tuple.state;
 			return tuple.value;
 		}));
@@ -73,6 +86,10 @@ public final class Agent<S> {
 		return getAndUpdateAsync(st -> completedFuture(modifierFn.apply(st)));
 	}
 
+	@Override
+	Enqueuer<?> enq() {
+		return enq.enq();
+	}
 
 	public final static class StateValuePair<S, V> {
 		public final S state;

@@ -17,7 +17,10 @@ import static org.testng.Assert.assertTrue;
 
 public class ExactDateSchedulerTest {
 
-	ExactDateScheduler sched = ExactDateScheduler.create(Enqueuer.conf().unbounded(), Timer.defaultInstance(), 10_000);
+	ExactDateScheduler sched = ExactDateScheduler.create(Timer.defaultInstance(), c -> {
+		c.setPlannedTasksLimit(5000);
+		c.setUnboundedQueue();
+	});
 	ThreadLocalRandom rng = ThreadLocalRandom.current();
 
 	@Test

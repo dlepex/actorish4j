@@ -3,8 +3,14 @@ package github.jcext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.function.Consumer;
+
+import static github.jcext.JcExt.with;
 
 
 /**
@@ -19,21 +25,32 @@ import java.util.concurrent.*;
  * This class doesn't follow ExecutorService submit()/execute() API deliberately because it can be misused for blocking tasks.
  */
 @SuppressWarnings("WeakerAccess")
-public final class TaskEnqueuer {
+public final class TaskEnqueuer extends EnqueuerStats {
 
+	public static Conf newConf() {
+		return new Conf();
+	}
 
-	public static TaskEnqueuer create(Enqueuer.Conf c) {
+	public static TaskEnqueuer create() {
+		return create(newConf());
+	}
+
+	public static TaskEnqueuer create(Conf c) {
 		return new TaskEnqueuer(c);
+	}
+
+	public static TaskEnqueuer create(Consumer<TaskEnqueuer.Conf> confInit) {
+		return create(with(newConf(), confInit));
 	}
 
 	private static final Logger log = LoggerFactory.getLogger(TaskEnqueuer.class);
 	private final Enqueuer<AsyncRunnable> enq;
-	private final String name;
+	private final RejectsListener rejectsListener;
 
 	@SuppressWarnings("unchecked")
-	private TaskEnqueuer(Enqueuer.Conf conf) {
-		this.enq = Enqueuer.create(conf, q -> q.poll().runAsync());
-		this.name = conf.name;
+	private TaskEnqueuer(Conf c) {
+		this.rejectsListener = c.rejectsListener;
+		this.enq = Enqueuer.create(q -> q.poll().runAsync(), c);
 	}
 
 	/**
@@ -50,6 +67,7 @@ public final class TaskEnqueuer {
 	 */
 	public void mustOffer(AsyncRunnable task) throws RejectedExecutionException {
 		if (!offer(task)) {
+			callRejectListener();
 			throw new RejectedExecutionException(toString());
 		}
 	}
@@ -80,12 +98,42 @@ public final class TaskEnqueuer {
 	}
 
 	public <V> CompletionStage<V> mustOfferCall(AsyncCallable<V> ac) throws RejectedExecutionException {
-		return offerCall(ac).orElseThrow(() -> new RejectedExecutionException(toString()));
+		return offerCall(ac).orElseThrow(() -> {
+			callRejectListener();
+			return new RejectedExecutionException(toString());
+		});
+	}
+
+	@Override
+	public Enqueuer<AsyncRunnable> enq() {
+		return enq;
+	}
+
+	private void callRejectListener() {
+		try {
+			rejectsListener.onReject(id());
+		} catch (Exception ex) {
+			log.debug("RejectsListener should never throw exceptions", ex);
+		}
 	}
 
 
-	@Override
-	public String toString() {
-		return "TaskEnqueuer:" + name;
+	/**
+	 * Hook for gathering stats or logging.
+	 */
+	@FunctionalInterface
+	public interface RejectsListener {
+		void onReject(Object id); // this method shouldn't throw exception.
+	}
+
+	private static final RejectsListener EmptyListener = id -> {};
+
+	public static class Conf extends Enqueuer.Conf {
+		private RejectsListener rejectsListener = EmptyListener;
+
+		// Use only for monitoring/logging.
+		public void setRejectsListener(RejectsListener rejectsListener) {
+			this.rejectsListener = Objects.requireNonNull(rejectsListener);
+		}
 	}
 }

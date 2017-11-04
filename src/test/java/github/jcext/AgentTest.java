@@ -11,7 +11,11 @@ public class AgentTest {
 
 	@Test
 	public void testVariousMethods() throws Exception {
-		Agent<String> agent = Agent.create(Enqueuer.conf().capacity(1000).optimizeFor(Enqueuer.Conf.OptMode.MEMORY), "");
+		String id = "Bond";
+		Agent<String> agent = Agent.create("", c -> {
+			c.setBoundedQueue(50_000);
+			c.setId(id);
+		});
 		assertEquals(agent.get().toCompletableFuture().get(), "");
 		agent.update(s -> s + "x");
 		assertEquals(agent.get().toCompletableFuture().get(), "x");
@@ -20,6 +24,7 @@ public class AgentTest {
 				.toCompletableFuture().get(), "zzz");
 		assertEquals(agent.get().toCompletableFuture().get(), "hello");
 		assertEquals(agent.get(st -> st.substring(0, 1)).toCompletableFuture().get(), "h");
+		assertEquals(agent.id(), id);
 	}
 
 }

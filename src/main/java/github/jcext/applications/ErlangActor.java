@@ -12,20 +12,16 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 
 
-//TODO work in progress: a toy class to demonstrate that Erlang Actors ("receive" statement) can be easily implemented on top of the Enqueuer.
+//TODO work in progress: a toy class to demonstrate that Erlang Actors (the "receive" statement) can be easily implemented on top of the Enqueuer.
 public abstract class ErlangActor {
 
 
 	private final Enqueuer<Object> enq;
 	private final Timer timer;
 
-	protected ErlangActor(Enqueuer.Conf c, Timer timer) {
-		enq = Enqueuer.create(c, this::actorLogic);
+	protected ErlangActor( Timer timer) {
+		enq = Enqueuer.create(this::actorLogic);
 		this.timer = Objects.requireNonNull(timer);
-	}
-
-	protected ErlangActor(Enqueuer.Conf c) {
-		this(c, Timer.defaultInstance());
 	}
 
 	public enum SpecialMsg {

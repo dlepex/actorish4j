@@ -33,8 +33,11 @@ public class TaskEnqueuerTest {
 				{600, 8, 0},
 				{300, 10, 0},
 				{400, 4, 0},
+				{1400, 16, 0},
+				{1400, 16, 0},
+				{1400, 16, 0},
+				{1400, 16, 0},
 				{1400, 16, 0}
-
 		};
 	}
 
@@ -44,7 +47,10 @@ public class TaskEnqueuerTest {
 		if (qcapacity == 0) {
 			qcapacity = 2 * nproducers * max + 1;
 		}
-		TaskEnqueuer tq = TaskEnqueuer.create(Enqueuer.conf().capacity(qcapacity));
+		int qcap = qcapacity;
+		TaskEnqueuer tq = TaskEnqueuer.create(c -> {
+			c.setBoundedQueue(qcap);
+		});
 		int[] sumBox = new int[1];
 		Function<Integer, AsyncRunnable> incTask = (n) -> delayedTask(() -> {
 			int z = rng.nextInt(100);
@@ -96,10 +102,32 @@ public class TaskEnqueuerTest {
 
 	@Test
 	void testResultCalulation() throws Exception {
-		TaskEnqueuer tq = TaskEnqueuer.create(Enqueuer.conf().capacity(10));
+		TaskEnqueuer tq = TaskEnqueuer.create(c -> c.setBoundedQueue(10));
 		Optional<CompletionStage<Integer>> opt = tq.offerCall(() -> CompletableFuture.supplyAsync(() -> 10));
 		assertTrue(opt.isPresent());
 		assertEquals(opt.get().toCompletableFuture().get(), new Integer(10));
+	}
+
+
+	@Test
+	void testConf() {
+		Enqueuer.Conf c1 = Enqueuer.newConf();
+		c1.useLockFreeQueue();
+		c1.setBoundedQueue(10000);
+		assertThrows(RuntimeException.class, c1::chooseQueueImpl);
+
+		Enqueuer.Conf c = Enqueuer.newConf();
+		c.setBoundedQueue(10_000);
+		assertEquals(c.chooseQueueImpl().getClass(), LinkedBlockingQueue.class);
+
+		c = Enqueuer.newConf();
+		c.setBoundedQueue(10_000);
+		c.usePreallocatedQueue();
+		assertEquals(c.chooseQueueImpl().getClass(), ArrayBlockingQueue.class);
+
+		c = Enqueuer.newConf();
+		c.setUnboundedQueue();
+		assertEquals(c.chooseQueueImpl().getClass(), ConcurrentLinkedQueue.class);
 	}
 
 	private static final RuntimeException MyException = new RuntimeException("Not a failure - just test exceptions.") {
@@ -126,5 +154,8 @@ public class TaskEnqueuerTest {
 			return cf;
 		};
 	}
+
+
+
 
 }

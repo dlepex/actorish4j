@@ -1,6 +1,7 @@
 package github.jcext.applications;
 
 import github.jcext.Enqueuer;
+import github.jcext.JcExt;
 import github.jcext.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 
 /**
@@ -19,6 +21,18 @@ import java.util.concurrent.*;
 @SuppressWarnings("WeakerAccess")
 public final class ExactDateScheduler {  //TODO proper reliable shutdown
 	private static final Logger logger = LoggerFactory.getLogger(ExactDateScheduler.class);
+
+
+	public static class Conf extends Enqueuer.Conf {
+		private int plannedTasksLimit = 1024;
+
+		public void setPlannedTasksLimit(int plannedTasksLimit) {
+			if (plannedTasksLimit < 1) {
+				throw new IllegalArgumentException();
+			}
+			this.plannedTasksLimit = plannedTasksLimit;
+		}
+	}
 
 	@FunctionalInterface
 	public interface Task {
@@ -41,18 +55,18 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 		}
 	}
 
-	private final Enqueuer<TaskStruct> inboundEnq;
+	private final Enqueuer<TaskStruct> enq;
 	private final int plannedTasksLimit;
 	private final Timer timer;
 
 
-	public static ExactDateScheduler create(Enqueuer.Conf c, Timer timer, int plannedTasksLimit) {
-		return new ExactDateScheduler(c, plannedTasksLimit, timer);
+	public static ExactDateScheduler create(Timer timer, Consumer<Conf> confInit) {
+		return new ExactDateScheduler(JcExt.with(new Conf(), confInit), timer);
 	}
 
-	private ExactDateScheduler(Enqueuer.Conf c, int plannedTasksLimit, Timer timer) {
-		this.inboundEnq = Enqueuer.create(c, this::doPoll);
-		this.plannedTasksLimit = plannedTasksLimit;
+	private ExactDateScheduler(Conf c, Timer timer) {
+		this.enq = Enqueuer.create(this::doPoll, c);
+		this.plannedTasksLimit = c.plannedTasksLimit;
 		this.timer = timer;
 		//executor.execute(this::pollingLoop);
 	}
@@ -60,7 +74,7 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 	public void schedule(LocalDateTime beginAt, Task task) throws RejectedExecutionException {
 		Objects.requireNonNull(task);
 		Objects.requireNonNull(beginAt);
-		if (!inboundEnq.offer(new TaskStruct(beginAt, task))) {
+		if (!enq.offer(new TaskStruct(beginAt, task))) {
 			throw new RejectedExecutionException("github.jcext.sample.ExactDateScheduler is flooded");
 		}
 	}
@@ -173,7 +187,7 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 			LocalDateTime now = LocalDateTime.now();
 			pollTimeout = Duration.between(now, task.begin).toMillis();
 			if (pollTimeout > 0) {
-				timer.timeout(() -> inboundEnq.offer(timeoutSpecialValue), pollTimeout, TimeUnit.MILLISECONDS);
+				timer.timeout(() -> enq.offer(timeoutSpecialValue), pollTimeout, TimeUnit.MILLISECONDS);
 				return null;
 			}
 
