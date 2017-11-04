@@ -25,7 +25,7 @@ import static github.jcext.JcExt.with;
  * This class doesn't follow ExecutorService submit()/execute() API deliberately because it can be misused for blocking tasks.
  */
 @SuppressWarnings("WeakerAccess")
-public final class TaskEnqueuer extends EnqueuerStats {
+public final class TaskEnqueuer extends EnqueuerBasedEntity {
 
 	public static Conf newConf() {
 		return new Conf();
@@ -35,12 +35,15 @@ public final class TaskEnqueuer extends EnqueuerStats {
 		return create(newConf());
 	}
 
-	public static TaskEnqueuer create(Conf c) {
-		return new TaskEnqueuer(c);
+	public static TaskEnqueuer create(Conf config) {
+		return new TaskEnqueuer(config);
 	}
 
-	public static TaskEnqueuer create(Consumer<TaskEnqueuer.Conf> confInit) {
-		return create(with(newConf(), confInit));
+	/**
+	 * This form of constructor can save you a few lines of code: you don't need to create {@link Enqueuer.Conf} object yourself.
+	 */
+	public static TaskEnqueuer create(Consumer<TaskEnqueuer.Conf> configInit) {
+		return create(with(newConf(), configInit));
 	}
 
 	private static final Logger log = LoggerFactory.getLogger(TaskEnqueuer.class);
@@ -62,6 +65,8 @@ public final class TaskEnqueuer extends EnqueuerStats {
 	}
 
 	/**
+	 * Be careful this method will throw RejectedExecutionException, if queue overflows
+	 *
 	 * @see #offer(AsyncRunnable)  if you want boolean result instead of RejectedExecutionException
 	 * @see #offerCall(AsyncCallable)  if your task has some usefull result of its execution
 	 */
@@ -97,6 +102,11 @@ public final class TaskEnqueuer extends EnqueuerStats {
 		return offer(t) ? Optional.of(result) : Optional.empty();
 	}
 
+	/**
+	 * Be careful this method will throw RejectedExecutionException, if queue overflows
+	 *
+	 * @see #offerCall(AsyncCallable)  if you don't like exceptions.
+	 */
 	public <V> CompletionStage<V> mustOfferCall(AsyncCallable<V> ac) throws RejectedExecutionException {
 		return offerCall(ac).orElseThrow(() -> {
 			callRejectListener();
@@ -105,7 +115,7 @@ public final class TaskEnqueuer extends EnqueuerStats {
 	}
 
 	@Override
-	public Enqueuer<AsyncRunnable> enq() {
+	Enqueuer<AsyncRunnable> enq() {
 		return enq;
 	}
 
@@ -119,19 +129,27 @@ public final class TaskEnqueuer extends EnqueuerStats {
 
 
 	/**
-	 * Hook for gathering stats or logging.
+	 * This hook may be helpful if you need to count how many times RejectedExecutionException was thrown
+	 * in mustOffer-methods of {@link TaskEnqueuer}.
 	 */
 	@FunctionalInterface
 	public interface RejectsListener {
-		void onReject(Object id); // this method shouldn't throw exception.
+
+		void onReject(Object id);
 	}
 
-	private static final RejectsListener EmptyListener = id -> {};
+	private static final RejectsListener EmptyListener = id -> {
+	};
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public static class Conf extends Enqueuer.Conf {
 		private RejectsListener rejectsListener = EmptyListener;
 
-		// Use only for monitoring/logging.
+		/**
+		 * For logging/monitoring usage only.
+		 */
 		public void setRejectsListener(RejectsListener rejectsListener) {
 			this.rejectsListener = Objects.requireNonNull(rejectsListener);
 		}

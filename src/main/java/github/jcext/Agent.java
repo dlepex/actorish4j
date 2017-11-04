@@ -17,10 +17,12 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * Clojure Agents are different (more limited), aside from the fact that they can participate in STM
  * <p>
  *
+ * Be careful, all methods in this class may throw RejectedExecutionException, if queue overflows
+ *
  * @param <S> state type. It's recommended for S to be immutable
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public final class Agent<S> extends EnqueuerStats {
+public final class Agent<S> extends EnqueuerBasedEntity {
 
 	private final TaskEnqueuer enq;
 	/**

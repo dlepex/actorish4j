@@ -1,16 +1,17 @@
 package github.jcext;
 
-abstract class EnqueuerStats {
+public abstract class EnqueuerBasedEntity {
 
 	/**
-	 * Stats usage only, never use it for the logic of your App.
+	 * Current queue size. For logging/monitoring usage only!
 	 */
 	public int queueSize() {
 		return enq().queueSize();
 	}
 
 	/**
-	 * user associated id.
+	 * User associated id. Can be anything, with good toString() method.
+	 * @see github.jcext.Enqueuer.Conf#setId(Object)
 	 */
 	public Object id() {
 		return enq().id();
