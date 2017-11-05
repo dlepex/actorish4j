@@ -2,18 +2,18 @@ package github.jcext;
 
 abstract class EnqueuerBasedEntity {
 	/**
-	 * User associated id. Can be anything, with good toString() method.
-	 * @see github.jcext.Enqueuer.Conf#setId(Object)
+	 * User associated id, can be anything having good toString() method.
+	 * @see Enqueuer.Conf#setAssociatedId(Object)
 	 */
-	public Object id() {
-		return underlyingEnq().id();
+	public Object associatedId() {
+		return underlyingEnq().associatedId();
 	}
 
 	protected abstract Enqueuer<?> underlyingEnq();
 
 	@Override
 	public String toString() {
-		Object id = id();
+		Object id = associatedId();
 		if (id != null) {
 			return getClass().getSimpleName() + "@" + id;
 		}

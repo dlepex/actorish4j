@@ -25,49 +25,35 @@ import static github.jcext.JcExt.with;
  * This class doesn't follow ExecutorService submit()/execute() API deliberately because it can be misused for blocking tasks.
  */
 @SuppressWarnings("WeakerAccess")
-public final class TaskEnqueuer extends EnqueuerBasedEntity {
+public final class TaskEnqueuer extends Enqueuer<AsyncRunnable> {
+	private static final Logger log = LoggerFactory.getLogger(TaskEnqueuer.class);
+	private final RejectsListener rejectsListener;
+
 
 	public static Conf newConf() {
 		return new Conf();
 	}
 
-	public static TaskEnqueuer create() {
-		return create(newConf());
+	public TaskEnqueuer(Conf config) {
+		super(q -> q.poll().runAsync(), config);
+		this.rejectsListener = config.rejectsListener;
 	}
 
-	public static TaskEnqueuer create(Conf config) {
-		return new TaskEnqueuer(config);
-	}
-
-	/**
-	 * This form of constructor can save you a few lines of code: you don't need to create configuration object yourself.
-	 */
-	public static TaskEnqueuer create(Consumer<TaskEnqueuer.Conf> configInit) {
-		return create(with(newConf(), configInit));
-	}
-
-	private static final Logger log = LoggerFactory.getLogger(TaskEnqueuer.class);
-	private final Enqueuer<AsyncRunnable> enq;
-	private final RejectsListener rejectsListener;
-
-	@SuppressWarnings("unchecked")
-	private TaskEnqueuer(Conf c) {
-		this.rejectsListener = c.rejectsListener;
-		this.enq = Enqueuer.create(q -> q.poll().runAsync(), c);
+	public TaskEnqueuer() {
+		this(Conf.Default);
 	}
 
 	/**
-	 * @return false if queue overflows
+	 * This form of constructor can save you a few lines of code: you don't need to create configuration\ object yourself.
 	 */
-	@SuppressWarnings("WeakerAccess")
-	public boolean offer(AsyncRunnable task) {
-		return enq.offer(task);
+	public TaskEnqueuer(Consumer<Conf> configInit) {
+		this(with(newConf(), configInit));
 	}
 
 	/**
 	 * Be careful this method will throw RejectedExecutionException, if queue overflows
 	 *
-	 * @see #offer(AsyncRunnable)  if you want boolean result instead of RejectedExecutionException
+	 * @see Enqueuer#offer(Object)   if you want boolean result instead of RejectedExecutionException
 	 * @see #offerCall(AsyncCallable)  if your task has some usefull result of its execution
 	 */
 	public void mustOffer(AsyncRunnable task) throws RejectedExecutionException {
@@ -114,14 +100,9 @@ public final class TaskEnqueuer extends EnqueuerBasedEntity {
 		});
 	}
 
-	@Override
-	protected Enqueuer<AsyncRunnable> underlyingEnq() {
-		return enq;
-	}
-
 	private void callRejectListener() {
 		try {
-			rejectsListener.onReject(id());
+			rejectsListener.onReject(associatedId());
 		} catch (Exception ex) {
 			log.debug("RejectsListener should never throw exceptions", ex);
 		}
@@ -144,8 +125,9 @@ public final class TaskEnqueuer extends EnqueuerBasedEntity {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static class Conf extends Enqueuer.Conf<AsyncRunnable> {
+	public static class Conf extends Enqueuer.Conf {
 		private RejectsListener rejectsListener = EmptyListener;
+		private static final Conf Default = new Conf();
 
 		/**
 		 * For logging/monitoring usage only.

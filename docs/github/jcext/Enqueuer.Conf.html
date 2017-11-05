@@ -74,13 +74,13 @@ var activeTableTab = "activeTableTab";
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -91,24 +91,20 @@ var activeTableTab = "activeTableTab";
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">github.jcext</div>
-<h2 title="Class Enqueuer.Conf" class="title">Class Enqueuer.Conf&lt;T&gt;</h2>
+<h2 title="Class Enqueuer.Conf" class="title">Class Enqueuer.Conf</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>github.jcext.Enqueuer.Conf&lt;T&gt;</li>
+<li>github.jcext.Enqueuer.Conf</li>
 </ul>
 </li>
 </ul>
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
-<dl>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - type of queue items</dd>
-</dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
 <dd><a href="../../github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications">ExactDateScheduler.Conf</a>, <a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></dd>
@@ -119,15 +115,34 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>public static class <span class="typeNameLabel">Enqueuer.Conf&lt;T&gt;</span>
+<pre>public static class <span class="typeNameLabel">Enqueuer.Conf</span>
 extends java.lang.Object</pre>
-<div class="block">Configuration object</div>
+<div class="block">Configuration object.
+ <p>
+ In theory this class should have type argument, but typed config objects feels like an overkill.</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#Conf--">Conf</a></span>()</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -148,29 +163,29 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-">setBoundedQueue</a></span>(int&nbsp;capacity)</code>
-<div class="block">By default queue is bounded with max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setAssociatedId-java.lang.Object-">setAssociatedId</a></span>(java.lang.Object&nbsp;id)</code>
+<div class="block">Optional user associated id, it is used for exception logging, and in toString()</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setCustomQueue-github.jcext.Enqueuer.QueueFactory-">setCustomQueue</a></span>(<a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext">Enqueuer.QueueFactory</a>&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt;&nbsp;custom)</code>
-<div class="block">Most users should be happy with default queues, but if you need something very special...</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-">setBoundedQueue</a></span>(int&nbsp;capacity)</code>
+<div class="block">By default queue is bounded with max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setCustomQueue-java.util.function.Supplier-">setCustomQueue</a></span>(java.util.function.Supplier&lt;? extends java.util.Queue&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt;&gt;&nbsp;custom)</code>&nbsp;</td>
+<td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setCustomQueue-github.jcext.Enqueuer.QueueFactory-">setCustomQueue</a></span>(<a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext">Enqueuer.QueueFactory</a>&lt;T&gt;&nbsp;custom)</code>
+<div class="block">Most users should be happy with default queues, but if you need something very special...</div>
+</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setId-java.lang.Object-">setId</a></span>(java.lang.Object&nbsp;id)</code>
-<div class="block">Optional user associated id.</div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setCustomQueue-java.util.function.Supplier-">setCustomQueue</a></span>(java.util.function.Supplier&lt;java.util.Queue&lt;?&gt;&gt;&nbsp;custom)</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setQueueWrapper-java.util.function.UnaryOperator-">setQueueWrapper</a></span>(java.util.function.UnaryOperator&lt;java.util.Queue&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt;&gt;&nbsp;wrapper)</code>
+<td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setQueueWrapper-java.util.function.UnaryOperator-">setQueueWrapper</a></span>(java.util.function.UnaryOperator&lt;java.util.Queue&lt;T&gt;&gt;&nbsp;wrapper)</code>
 <div class="block">Use this method if you'd like to gather some stats e.g.</div>
 </td>
 </tr>
@@ -214,6 +229,23 @@ extends java.lang.Object</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="Conf--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Conf</h4>
+<pre>public&nbsp;Conf()</pre>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ============ METHOD DETAIL ========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.detail">
@@ -244,14 +276,14 @@ extends java.lang.Object</pre>
 <div class="block">This option is discouraged, most users should use bounded queues.</div>
 </li>
 </ul>
-<a name="setId-java.lang.Object-">
+<a name="setAssociatedId-java.lang.Object-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setId</h4>
-<pre>public&nbsp;void&nbsp;setId(java.lang.Object&nbsp;id)</pre>
-<div class="block">Optional user associated id.</div>
+<h4>setAssociatedId</h4>
+<pre>public&nbsp;void&nbsp;setAssociatedId(java.lang.Object&nbsp;id)</pre>
+<div class="block">Optional user associated id, it is used for exception logging, and in toString()</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>id</code> - must have good readable toString() representation</dd>
@@ -302,7 +334,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setCustomQueue</h4>
-<pre>public&nbsp;void&nbsp;setCustomQueue(<a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext">Enqueuer.QueueFactory</a>&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt;&nbsp;custom)</pre>
+<pre>public&nbsp;&lt;T&gt;&nbsp;void&nbsp;setCustomQueue(<a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext">Enqueuer.QueueFactory</a>&lt;T&gt;&nbsp;custom)</pre>
 <div class="block">Most users should be happy with default queues, but if you need something very special... <p>
  The queue must be thread-safe and define these 3 methods: poll(), offer() and isEmpty(). <p>
  Do not use clever lock-free structures. They are not for you.
@@ -316,7 +348,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setCustomQueue</h4>
-<pre>public&nbsp;void&nbsp;setCustomQueue(java.util.function.Supplier&lt;? extends java.util.Queue&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt;&gt;&nbsp;custom)</pre>
+<pre>public&nbsp;void&nbsp;setCustomQueue(java.util.function.Supplier&lt;java.util.Queue&lt;?&gt;&gt;&nbsp;custom)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><code>#setCustomQueue(QueueFactory)</code></dd>
@@ -329,7 +361,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setQueueWrapper</h4>
-<pre>public&nbsp;void&nbsp;setQueueWrapper(java.util.function.UnaryOperator&lt;java.util.Queue&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt;&gt;&nbsp;wrapper)</pre>
+<pre>public&nbsp;&lt;T&gt;&nbsp;void&nbsp;setQueueWrapper(java.util.function.UnaryOperator&lt;java.util.Queue&lt;T&gt;&gt;&nbsp;wrapper)</pre>
 <div class="block">Use this method if you'd like to gather some stats e.g. max/mean q length, item arrival frequency etc.
  Queue wrapper creates the queue proxy, which must proxy at least these 3 methods: poll(), offer() and isEmpty()</div>
 </li>
@@ -398,13 +430,13 @@ extends java.lang.Object</pre>
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

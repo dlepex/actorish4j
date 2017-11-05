@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":9,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":9,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -74,13 +74,13 @@ var activeTableTab = "activeTableTab";
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -109,17 +109,23 @@ var activeTableTab = "activeTableTab";
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - type of queue items</dd>
 </dl>
+<dl>
+<dt>Direct Known Subclasses:</dt>
+<dd><a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></dd>
+</dl>
 <hr>
 <br>
-<pre>public final class <span class="typeNameLabel">Enqueuer&lt;T&gt;</span>
+<pre>public class <span class="typeNameLabel">Enqueuer&lt;T&gt;</span>
 extends java.lang.Object</pre>
 <div class="block">Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
  <b>single consumer</b> <a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><code>Enqueuer.Poller</code></a> can read (poll) it.<p>
  All operations in this class are non-blocking, and the poller doesn't need a separate thread.<p>
- Enqueuer is the most basic form of actor-like entity: it is the queue + associated single consumer. <p>
- All Actor-like entities in this library: <a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext"><code>TaskEnqueuer</code></a> <a href="../../github/jcext/Agent.html" title="class in github.jcext"><code>Agent</code></a>, use Enqueuer to do their job <p>
+ From the user point of view this class has only one method: <a href="../../github/jcext/Enqueuer.html#offer-T-"><code>offer(Object)</code></a> <p>
  <p>
- Only poll(), offer() and isEmpty() methods of the <code>Queue</code> interface are used in this class. <p></div>
+ Only poll(), offer() and isEmpty() methods of the <code>Queue</code> interface are used in this class. <p>
+ <p>
+ This class may be inherited, if its <a href="../../github/jcext/Enqueuer.html#offer-T-"><code>offer(Object)</code></a> final method makes sense for the descendants.
+ In other cases prefer composition <p></div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><code>Enqueuer.Poller</code></a></dd>
@@ -144,8 +150,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="type parameter in Enqueuer.Conf">T</a>&gt;</span></code>
-<div class="block">Configuration object</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></span></code>
+<div class="block">Configuration object.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -182,6 +188,38 @@ extends java.lang.Object</pre>
 </table>
 </li>
 </ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#Enqueuer-github.jcext.Enqueuer.Poller-">Enqueuer</a></span>(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&gt;&nbsp;poller)</code>
+<div class="block">Additional Enqueuer constructor
+ The constructor with default configuration: FJP thread pool and bounded queue with <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>defaultCapacity</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#Enqueuer-github.jcext.Enqueuer.Poller-java.util.function.Consumer-">Enqueuer</a></span>(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&gt;&nbsp;poller,
+        java.util.function.Consumer&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&gt;&nbsp;configInit)</code>
+<div class="block">Additional Enqueuer constructor.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#Enqueuer-github.jcext.Enqueuer.Poller-github.jcext.Enqueuer.Conf-">Enqueuer</a></span>(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&gt;&nbsp;poller,
+        <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&nbsp;config)</code>
+<div class="block">Main constructor, descendant classes must use this form.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -195,40 +233,24 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;T&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#create-github.jcext.Enqueuer.Poller-">create</a></span>(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;poller)</code>
-<div class="block">The constructor with default configuration: FJP thread pool and bounded queue with <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>defaultCapacity</code></a>.</div>
+<td class="colFirst"><code>java.lang.Object</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#associatedId--">associatedId</a></span>()</code>
+<div class="block">User associated id, can be anything having good toString() method.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;T&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#create-github.jcext.Enqueuer.Poller-java.util.function.Consumer-">create</a></span>(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;poller,
-      java.util.function.Consumer&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&lt;T&gt;&gt;&nbsp;configInit)</code>
-<div class="block">This form of constructor can save you a few lines of code: you don't need to create <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext"><code>Enqueuer.Conf</code></a> object yourself.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;T&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#create-github.jcext.Enqueuer.Poller-github.jcext.Enqueuer.Conf-">create</a></span>(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;poller,
-      <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&lt;T&gt;&nbsp;config)</code>&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.lang.Object</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#id--">id</a></span>()</code>
-<div class="block">User associated id.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&lt;T&gt;</code></td>
+<td class="colFirst"><code>static <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#newConf--">newConf</a></span>()</code>
 <div class="block">Creates new config object with default settings.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#offer-T-">offer</a></span>(<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&nbsp;t)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#offer-T-">offer</a></span>(<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&nbsp;t)</code>
+<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="../../github/jcext/Enqueuer.Poller.html#pollAsync-java.util.Queue-"><code>Enqueuer.Poller.pollAsync(Queue)</code></a> execution.</div>
+</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
@@ -268,6 +290,48 @@ extends java.lang.Object</pre>
 </ul>
 </li>
 </ul>
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="Enqueuer-github.jcext.Enqueuer.Poller-github.jcext.Enqueuer.Conf-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>Enqueuer</h4>
+<pre>public&nbsp;Enqueuer(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&gt;&nbsp;poller,
+                <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&nbsp;config)</pre>
+<div class="block">Main constructor, descendant classes must use this form.</div>
+</li>
+</ul>
+<a name="Enqueuer-github.jcext.Enqueuer.Poller-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>Enqueuer</h4>
+<pre>public&nbsp;Enqueuer(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&gt;&nbsp;poller)</pre>
+<div class="block">Additional Enqueuer constructor
+ The constructor with default configuration: FJP thread pool and bounded queue with <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>defaultCapacity</code></a>.</div>
+</li>
+</ul>
+<a name="Enqueuer-github.jcext.Enqueuer.Poller-java.util.function.Consumer-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Enqueuer</h4>
+<pre>public&nbsp;Enqueuer(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&gt;&nbsp;poller,
+                java.util.function.Consumer&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&gt;&nbsp;configInit)</pre>
+<div class="block">Additional Enqueuer constructor.
+ This form of constructor can save you a few lines of code: you don't need to create <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext"><code>Enqueuer.Conf</code></a> object yourself.</div>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ============ METHOD DETAIL ========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.detail">
@@ -280,43 +344,8 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>newConf</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&lt;T&gt;&nbsp;newConf()</pre>
+<pre>public static&nbsp;<a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&nbsp;newConf()</pre>
 <div class="block">Creates new config object with default settings.</div>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../github/jcext/Enqueuer.html#create-github.jcext.Enqueuer.Poller-java.util.function.Consumer-"><code>create(Poller, Consumer)</code></a></dd>
-</dl>
-</li>
-</ul>
-<a name="create-github.jcext.Enqueuer.Poller-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;T&gt;&nbsp;create(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;poller)</pre>
-<div class="block">The constructor with default configuration: FJP thread pool and bounded queue with <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>defaultCapacity</code></a>.</div>
-</li>
-</ul>
-<a name="create-github.jcext.Enqueuer.Poller-java.util.function.Consumer-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;T&gt;&nbsp;create(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;poller,
-                                     java.util.function.Consumer&lt;<a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&lt;T&gt;&gt;&nbsp;configInit)</pre>
-<div class="block">This form of constructor can save you a few lines of code: you don't need to create <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext"><code>Enqueuer.Conf</code></a> object yourself.</div>
-</li>
-</ul>
-<a name="create-github.jcext.Enqueuer.Poller-github.jcext.Enqueuer.Conf-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;T&gt;&nbsp;create(<a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;&nbsp;poller,
-                                     <a href="../../github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a>&lt;T&gt;&nbsp;config)</pre>
 </li>
 </ul>
 <a name="offer-java.lang.Object-">
@@ -327,26 +356,27 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>offer</h4>
-<pre>public&nbsp;boolean&nbsp;offer(<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&nbsp;t)</pre>
+<pre>public final&nbsp;boolean&nbsp;offer(<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&nbsp;t)</pre>
+<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="../../github/jcext/Enqueuer.Poller.html#pollAsync-java.util.Queue-"><code>Enqueuer.Poller.pollAsync(Queue)</code></a> execution.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>false if queue overflows</dd>
+<dd>what <code>Queue.offer(Object)</code> returns, <code>false</code> means queue overflow for bounded queues. <p></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><code>Queue.offer(Object)</code></dd>
 </dl>
 </li>
 </ul>
-<a name="id--">
+<a name="associatedId--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>id</h4>
-<pre>public&nbsp;java.lang.Object&nbsp;id()</pre>
-<div class="block">User associated id. Can be anything, with good toString() method.</div>
+<h4>associatedId</h4>
+<pre>public final&nbsp;java.lang.Object&nbsp;associatedId()</pre>
+<div class="block">User associated id, can be anything having good toString() method.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../github/jcext/Enqueuer.Conf.html#setId-java.lang.Object-"><code>Enqueuer.Conf.setId(Object)</code></a></dd>
+<dd><a href="../../github/jcext/Enqueuer.Conf.html#setAssociatedId-java.lang.Object-"><code>Enqueuer.Conf.setAssociatedId(Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -417,13 +447,13 @@ extends java.lang.Object</pre>
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

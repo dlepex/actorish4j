@@ -3,6 +3,7 @@ package github.jcext.applications;
 
 
 import github.jcext.Enqueuer;
+import github.jcext.JcExt;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public abstract class ErlangActor {
 	private final Timer timer;
 
 	protected ErlangActor( Timer timer) {
-		enq = Enqueuer.create(this::actorLogic);
+		enq = new Enqueuer<>(this::actorLogic);
 		this.timer = Objects.requireNonNull(timer);
 	}
 

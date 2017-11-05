@@ -12,9 +12,9 @@ public class AgentTest {
 	@Test
 	public void testVariousMethods() throws Exception {
 		String id = "Bond";
-		Agent<String> agent = Agent.create("", c -> {
+		Agent<String> agent = new Agent<>("", c -> {
 			c.setBoundedQueue(50_000);
-			c.setId(id);
+			c.setAssociatedId(id);
 		});
 		assertEquals(agent.get().toCompletableFuture().get(), "");
 		agent.update(s -> s + "x");
@@ -24,7 +24,8 @@ public class AgentTest {
 				.toCompletableFuture().get(), "zzz");
 		assertEquals(agent.get().toCompletableFuture().get(), "hello");
 		assertEquals(agent.get(st -> st.substring(0, 1)).toCompletableFuture().get(), "h");
-		assertEquals(agent.id(), id);
+		assertEquals(agent.associatedId(), id);
 	}
+
 
 }

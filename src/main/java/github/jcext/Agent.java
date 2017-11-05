@@ -16,7 +16,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * This implementation is inspired by Elixir Agents: https://hexdocs.pm/elixir/Agent.html
  * Clojure Agents are different (more limited), aside from the fact that they can participate in STM
  * <p>
- *
+ * <p>
  * Be careful, all methods in this class may throw RejectedExecutionException, if queue overflows
  *
  * @param <S> state type. It's recommended for S to be immutable
@@ -35,16 +35,17 @@ public final class Agent<S> extends EnqueuerBasedEntity {
 		return TaskEnqueuer.newConf();
 	}
 
-	public static <S> Agent<S> create(S initialState, TaskEnqueuer.Conf config) {
-		return new Agent<>(initialState, TaskEnqueuer.create(config));
+
+	public Agent(S initialState) {
+		this(initialState, newConf());
 	}
 
-	public static <S> Agent<S> create(S initialState) {
-		return create(initialState, newConf());
+	public Agent(S initialState, Consumer<TaskEnqueuer.Conf> configInit) {
+		this(initialState, with(newConf(), configInit));
 	}
 
-	public static <S> Agent<S> create(S initialState, Consumer<TaskEnqueuer.Conf> configInit) {
-		return create(initialState, with(newConf(), configInit));
+	public Agent(S initialState, TaskEnqueuer.Conf config) {
+		this(initialState, new TaskEnqueuer(config));
 	}
 
 	private Agent(S state, TaskEnqueuer enq) {
@@ -90,7 +91,7 @@ public final class Agent<S> extends EnqueuerBasedEntity {
 
 	@Override
 	protected Enqueuer<?> underlyingEnq() {
-		return enq.underlyingEnq();
+		return enq;
 	}
 
 	public final static class StateValuePair<S, V> {

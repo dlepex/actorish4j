@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":9,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":10,"i2":9,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -73,14 +73,14 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#fields.inherited.from.class.github.jcext.Enqueuer">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -98,7 +98,12 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li><a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">github.jcext.Enqueuer</a>&lt;<a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext">AsyncRunnable</a>&gt;</li>
+<li>
+<ul class="inheritance">
 <li>github.jcext.TaskEnqueuer</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -108,7 +113,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">TaskEnqueuer</span>
-extends java.lang.Object</pre>
+extends <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;<a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext">AsyncRunnable</a>&gt;</pre>
 <div class="block">TaskEnqueuer is the <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext"><code>Enqueuer</code></a> that polls and executes async tasks <a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext"><code>AsyncRunnable</code></a> one by one
  <p>
  TaskEnqueuer guarantees that
@@ -139,7 +144,7 @@ extends java.lang.Object</pre>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></span></code>
-<div class="block">Configuration object</div>
+<div class="block">Configuration object.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -148,6 +153,53 @@ extends java.lang.Object</pre>
 <div class="block">This hook may be helpful if you need to count how many times RejectedExecutionException was thrown
  in mustOffer-methods of <a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext"><code>TaskEnqueuer</code></a>.</div>
 </td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="nested.classes.inherited.from.class.github.jcext.Enqueuer">
+<!--   -->
+</a>
+<h3>Nested classes/interfaces inherited from class&nbsp;github.jcext.<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></h3>
+<code><a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;<a href="../../github/jcext/Enqueuer.Poller.html" title="type parameter in Enqueuer.Poller">T</a>&gt;, <a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext">Enqueuer.QueueFactory</a>&lt;<a href="../../github/jcext/Enqueuer.QueueFactory.html" title="type parameter in Enqueuer.QueueFactory">T</a>&gt;</code></li>
+</ul>
+</li>
+</ul>
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.github.jcext.Enqueuer">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;github.jcext.<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></h3>
+<code><a href="../../github/jcext/Enqueuer.html#defaultCapacity">defaultCapacity</a></code></li>
+</ul>
+</li>
+</ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#TaskEnqueuer--">TaskEnqueuer</a></span>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#TaskEnqueuer-java.util.function.Consumer-">TaskEnqueuer</a></span>(java.util.function.Consumer&lt;<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&gt;&nbsp;configInit)</code>
+<div class="block">This form of constructor can save you a few lines of code: you don't need to create configuration\ object yourself.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#TaskEnqueuer-github.jcext.TaskEnqueuer.Conf-">TaskEnqueuer</a></span>(<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&nbsp;config)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -165,54 +217,37 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#create--">create</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#create-java.util.function.Consumer-">create</a></span>(java.util.function.Consumer&lt;<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&gt;&nbsp;configInit)</code>
-<div class="block">This form of constructor can save you a few lines of code: you don't need to create configuration object yourself.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>static <a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#create-github.jcext.TaskEnqueuer.Conf-">create</a></span>(<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&nbsp;config)</code>&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.lang.Object</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#id--">id</a></span>()</code>
-<div class="block">User associated id.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#mustOffer-github.jcext.AsyncRunnable-">mustOffer</a></span>(<a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext">AsyncRunnable</a>&nbsp;task)</code>
 <div class="block">Be careful this method will throw RejectedExecutionException, if queue overflows</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>&lt;V&gt;&nbsp;java.util.concurrent.CompletionStage&lt;V&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#mustOfferCall-github.jcext.AsyncCallable-">mustOfferCall</a></span>(<a href="../../github/jcext/AsyncCallable.html" title="interface in github.jcext">AsyncCallable</a>&lt;V&gt;&nbsp;ac)</code>
 <div class="block">Be careful this method will throw RejectedExecutionException, if queue overflows</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#newConf--">newConf</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#offer-github.jcext.AsyncRunnable-">offer</a></span>(<a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext">AsyncRunnable</a>&nbsp;task)</code>&nbsp;</td>
-</tr>
-<tr id="i8" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;V&gt;&nbsp;java.util.Optional&lt;java.util.concurrent.CompletionStage&lt;V&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#offerCall-github.jcext.AsyncCallable-">offerCall</a></span>(<a href="../../github/jcext/AsyncCallable.html" title="interface in github.jcext">AsyncCallable</a>&lt;V&gt;&nbsp;ac)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/TaskEnqueuer.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.github.jcext.Enqueuer">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;github.jcext.<a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></h3>
+<code><a href="../../github/jcext/Enqueuer.html#associatedId--">associatedId</a>, <a href="../../github/jcext/Enqueuer.html#offer-T-">offer</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -228,6 +263,42 @@ extends java.lang.Object</pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="TaskEnqueuer-github.jcext.TaskEnqueuer.Conf-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>TaskEnqueuer</h4>
+<pre>public&nbsp;TaskEnqueuer(<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&nbsp;config)</pre>
+</li>
+</ul>
+<a name="TaskEnqueuer--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>TaskEnqueuer</h4>
+<pre>public&nbsp;TaskEnqueuer()</pre>
+</li>
+</ul>
+<a name="TaskEnqueuer-java.util.function.Consumer-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>TaskEnqueuer</h4>
+<pre>public&nbsp;TaskEnqueuer(java.util.function.Consumer&lt;<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&gt;&nbsp;configInit)</pre>
+<div class="block">This form of constructor can save you a few lines of code: you don't need to create configuration\ object yourself.</div>
+</li>
+</ul>
+</li>
+</ul>
 <!-- ============ METHOD DETAIL ========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.detail">
@@ -243,47 +314,6 @@ extends java.lang.Object</pre>
 <pre>public static&nbsp;<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&nbsp;newConf()</pre>
 </li>
 </ul>
-<a name="create--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;<a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a>&nbsp;create()</pre>
-</li>
-</ul>
-<a name="create-github.jcext.TaskEnqueuer.Conf-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;<a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a>&nbsp;create(<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&nbsp;config)</pre>
-</li>
-</ul>
-<a name="create-java.util.function.Consumer-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>create</h4>
-<pre>public static&nbsp;<a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a>&nbsp;create(java.util.function.Consumer&lt;<a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a>&gt;&nbsp;configInit)</pre>
-<div class="block">This form of constructor can save you a few lines of code: you don't need to create configuration object yourself.</div>
-</li>
-</ul>
-<a name="offer-github.jcext.AsyncRunnable-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>offer</h4>
-<pre>public&nbsp;boolean&nbsp;offer(<a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext">AsyncRunnable</a>&nbsp;task)</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>false if queue overflows</dd>
-</dl>
-</li>
-</ul>
 <a name="mustOffer-github.jcext.AsyncRunnable-">
 <!--   -->
 </a>
@@ -297,7 +327,7 @@ extends java.lang.Object</pre>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.util.concurrent.RejectedExecutionException</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../github/jcext/TaskEnqueuer.html#offer-github.jcext.AsyncRunnable-"><code>if you want boolean result instead of RejectedExecutionException</code></a>, 
+<dd><a href="../../github/jcext/Enqueuer.html#offer-T-"><code>if you want boolean result instead of RejectedExecutionException</code></a>, 
 <a href="../../github/jcext/TaskEnqueuer.html#offerCall-github.jcext.AsyncCallable-"><code>if your task has some usefull result of its execution</code></a></dd>
 </dl>
 </li>
@@ -329,20 +359,6 @@ extends java.lang.Object</pre>
 <dd><code>java.util.concurrent.RejectedExecutionException</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../github/jcext/TaskEnqueuer.html#offerCall-github.jcext.AsyncCallable-"><code>if you don't like exceptions.</code></a></dd>
-</dl>
-</li>
-</ul>
-<a name="id--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>id</h4>
-<pre>public&nbsp;java.lang.Object&nbsp;id()</pre>
-<div class="block">User associated id. Can be anything, with good toString() method.</div>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../github/jcext/Enqueuer.Conf.html#setId-java.lang.Object-"><code>Enqueuer.Conf.setId(Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -412,14 +428,14 @@ extends java.lang.Object</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#fields.inherited.from.class.github.jcext.Enqueuer">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 
 
 /**
+ * Unstable API
  * Experimental, {@link Enqueuer} application to exact-date scheduling.
  */
 @SuppressWarnings("WeakerAccess")
@@ -64,7 +65,7 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 	}
 
 	private ExactDateScheduler(Conf c, Timer timer) {
-		this.enq = Enqueuer.create(this::doPoll, c);
+		this.enq = new Enqueuer<>(this::doPoll, c);
 		this.plannedTasksLimit = c.plannedTasksLimit;
 		this.timer = timer;
 		//executor.execute(this::pollingLoop);

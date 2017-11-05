@@ -13,23 +13,24 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.*;
 
 import static github.jcext.JcExt.doneFuture;
-import static github.jcext.JcExt.with;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
  * <b>single consumer</b> {@link Poller} can read (poll) it.<p>
  * All operations in this class are non-blocking, and the poller doesn't need a separate thread.<p>
- * Enqueuer is the most basic form of actor-like entity: it is the queue + associated single consumer. <p>
- * All Actor-like entities in this library: {@link TaskEnqueuer} {@link Agent}, use Enqueuer to do their job <p>
+ * From the user point of view this class has only one method: {@link #offer(Object)} <p>
  * <p>
  * Only poll(), offer() and isEmpty() methods of the {@link Queue} interface are used in this class. <p>
+ * <p>
+ * This class may be inherited, if its {@link #offer(Object)} final method makes sense for the descendants.
+ * In other cases prefer composition <p>
  *
  * @param <T> type of queue items
  * @see Poller
  */
 @SuppressWarnings("WeakerAccess")
-public final class Enqueuer<T> extends EnqueuerBasedEntity {
+public class Enqueuer<T> extends EnqueuerBasedEntity {
 	/**
 	 * Default bounded queue capacity.
 	 * Use system property {@code "jcext.enq.defaultCap"} to change it.
@@ -48,38 +49,39 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 	private final Object id;
 	private final Executor maybeSameThread;
 
-
 	/**
 	 * Creates new config object with default settings.
-	 *
-	 * @see Enqueuer#create(Poller, Consumer)
 	 */
-	public static <T> Conf<T> newConf() {
-		return new Conf<>();
+	public static Conf newConf() {
+		return new Conf();
 	}
 
 	/**
+	 * Main constructor, descendant classes must use this form.
+	 */
+	public Enqueuer(Poller<T> poller, Conf config) {
+		this(config.chooseQueueImpl(), config.threadPool, config.id, requireNonNull(poller), config.sameThreadOpt);
+	}
+
+	/**
+	 * Additional Enqueuer constructor
 	 * The constructor with default configuration: FJP thread pool and bounded queue with {@link Enqueuer#defaultCapacity}.
 	 */
 	@SuppressWarnings("all")
-	public static <T> Enqueuer<T> create(Poller<T> poller) {
-		return create(poller, Conf.Default);
+	public Enqueuer(Enqueuer.Poller<T> poller) {
+		this(poller, Enqueuer.Conf.Default);
 	}
 
 	/**
-	 * This form of constructor can save you a few lines of code: you don't need to create {@link Conf} object yourself.
+	 * Additional Enqueuer constructor.
+	 * This form of constructor can save you a few lines of code: you don't need to create {@link Enqueuer.Conf} object yourself.
 	 */
-	public static <T> Enqueuer<T> create(Poller<T> poller, Consumer<Conf<T>> configInit) {
-		return create(poller, with(newConf(), configInit));
-	}
-
-	public static <T> Enqueuer<T> create(Poller<T> poller, Conf<T> config) {
-		return new Enqueuer<>(config.chooseQueueImpl(), config.threadPool, config.id, requireNonNull(poller), config.sameThreadOpt);
+	public Enqueuer(Enqueuer.Poller<T> poller, Consumer<Enqueuer.Conf> configInit) {
+		this(poller, JcExt.with(Enqueuer.newConf(), configInit));
 	}
 
 	@SuppressWarnings("unchecked")
-	private Enqueuer(Queue<T> q, Executor threadPool, Object id, Poller<T> poller,
-									 boolean sameThredOpt) {
+	private Enqueuer(Queue<T> q, Executor threadPool, Object id, Poller<T> poller, boolean sameThredOpt) {
 		this.queue = q;
 		this.id = id;
 		this.maybeSameThread = sameThredOpt ? sameThreadExecutor : threadPool;
@@ -93,12 +95,15 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		this.queuePollRunnable = () -> runSafely(poller).whenComplete(pollNextIfExists);
 	}
 
+
 	/**
-	 * @return false if queue overflows
+	 * This method just calls {@link Queue#offer(Object)}, and possibly schedules {@link Poller#pollAsync(Queue)} execution.
+	 *
+	 * @return what {@link Queue#offer(Object)} returns, {@code false} means queue overflow for bounded queues. <p>
 	 * @see Queue#offer(Object)
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public boolean offer(T t) {
+	public final boolean offer(T t) {
 		if (!queue.offer(t)) {
 			return false;
 		}
@@ -189,27 +194,28 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object id() {
+	public final Object associatedId() {
 		return id;
 	}
 
 	@Override
-	protected Enqueuer<?> underlyingEnq() {
+	protected final Enqueuer<?> underlyingEnq() {
 		return this;
 	}
 
 
 	/**
-	 * Configuration object
-	 *
-	 * @param <T> type of queue items
+	 * Configuration object.
+	 * <p>
+	 * In theory this class should have type argument, but typed config objects feels like an overkill.
 	 */
-	public static class Conf<T> {
+	public static class Conf {
 
-		private static final Conf Default = new Conf();
+		static final Conf Default = new Conf();
 
 		/**
 		 * By default queue is bounded with max size equal to {@link #defaultCapacity}
+		 *
 		 * @param capacity max queue size.
 		 */
 		public void setBoundedQueue(int capacity) {
@@ -231,11 +237,11 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * Optional user associated id.
+		 * Optional user associated id, it is used for exception logging, and in toString()
 		 *
 		 * @param id must have good readable toString() representation
 		 */
-		public void setId(Object id) {
+		public void setAssociatedId(Object id) {
 			this.id = Objects.requireNonNull(id);
 		}
 
@@ -275,14 +281,14 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		 * For instance, most JCTools queues will not work with this library.<p>
 		 * Use this method only if you understand what you're doing! <p>
 		 */
-		public void setCustomQueue(QueueFactory<T> custom) {
+		public <T> void setCustomQueue(QueueFactory<T> custom) {
 			this.custom = Objects.requireNonNull(custom);
 		}
 
 		/**
 		 * @see #setCustomQueue(QueueFactory)
 		 */
-		public void setCustomQueue(Supplier<? extends Queue<T>> custom) {
+		public void setCustomQueue(Supplier<Queue<?>> custom) {
 			Objects.requireNonNull(custom);
 			setCustomQueue(ignored -> custom.get());
 		}
@@ -291,8 +297,9 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		 * Use this method if you'd like to gather some stats e.g. max/mean q length, item arrival frequency etc.
 		 * Queue wrapper creates the queue proxy, which must proxy at least these 3 methods: poll(), offer() and isEmpty()
 		 */
-		public void setQueueWrapper(UnaryOperator<Queue<T>> wrapper) {
-			this.wrapper = Objects.requireNonNull(wrapper);
+		@SuppressWarnings("all")
+		public <T> void setQueueWrapper(UnaryOperator<Queue<T>> wrapper) {
+			this.wrapper = (UnaryOperator) Objects.requireNonNull(wrapper);
 		}
 
 		/**
@@ -318,16 +325,13 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 		private boolean useLockFreeQueue;
 		private boolean usePreallocatedQueue;
 		private boolean sameThreadOpt = true;
-		private QueueFactory<T> custom;
-		private UnaryOperator<Queue<T>> wrapper;
+		private QueueFactory custom;
+		private UnaryOperator<Queue> wrapper;
 
-		protected Conf() {
-		}
-
-		Queue<T> chooseQueueImpl() {
-			QueueFactory<T> custom = this.custom;
+		<T> Queue<T> chooseQueueImpl() {
+			QueueFactory custom = this.custom;
 			int cap = this.capacity;
-			if (custom != null) return wrap(custom.create(cap));
+			if (custom != null) return wrap(Objects.requireNonNull(custom.create(cap), "custom queue can't be null."));
 			boolean usePreallocatedQueue = this.usePreallocatedQueue;
 
 			if (usePreallocatedQueue && cap == 0) {
@@ -348,8 +352,9 @@ public final class Enqueuer<T> extends EnqueuerBasedEntity {
 			}
 		}
 
-		private Queue<T> wrap(Queue<T> q) {
-			return wrapper == null ? q : wrapper.apply(q);
+		@SuppressWarnings("all")
+		private <T> Queue<T> wrap(Queue q) {
+			return wrapper == null ? q : Objects.requireNonNull(wrapper.apply(q), "queue wrapper can't return null");
 		}
 	}
 

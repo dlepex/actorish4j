@@ -48,7 +48,7 @@ public class TaskEnqueuerTest {
 			qcapacity = 2 * nproducers * max + 1;
 		}
 		int qcap = qcapacity;
-		TaskEnqueuer tq = TaskEnqueuer.create(c -> {
+		TaskEnqueuer tq = new TaskEnqueuer(c -> {
 			c.setBoundedQueue(qcap);
 		});
 		int[] sumBox = new int[1];
@@ -102,7 +102,7 @@ public class TaskEnqueuerTest {
 
 	@Test
 	void testResultCalulation() throws Exception {
-		TaskEnqueuer tq = TaskEnqueuer.create(c -> c.setBoundedQueue(10));
+		TaskEnqueuer tq = new TaskEnqueuer(c -> c.setBoundedQueue(10));
 		Optional<CompletionStage<Integer>> opt = tq.offerCall(() -> CompletableFuture.supplyAsync(() -> 10));
 		assertTrue(opt.isPresent());
 		assertEquals(opt.get().toCompletableFuture().get(), new Integer(10));
