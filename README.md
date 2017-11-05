@@ -13,7 +13,7 @@ Simplest way to use JCExt in your project is thru https://jitpack.io
 For gradle build: 
 ```groovy
 	dependencies {
-		compile 'com.github.dlepex:jcext:v0.5'
+		compile 'com.github.dlepex:jcext:v0.6'
 
 		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
 		// JCExt may use JCTools MpmcArrayQueue, if it detects its presence
@@ -47,7 +47,7 @@ TaskEnqueuer guarantees that:
 
 ##### github.jcext.Agent https://dlepex.github.io/jcext/github/jcext/Agent.html
 
-- **Agent** implements the specific form of "lock pattern" for async computations which
+- **Agent** implements the specific form of "locking pattern" for async computations which
 need to share a mutable state.
 - The implementation is inspired by Elixir Agent module. It is rather trivial wrapper around the TaskEnqueuer class 
 (which in turn is the wrapper around Enqueuer)
