@@ -1,12 +1,12 @@
 #### Purpose
 
-This small lib provides concurrent, asynchronous, statefull (actor-like) entities: Enqueuer, TaskEnqueuer and Agent.
+This small lib provides concurrent, asynchronous/non-blocking, statefull (*actor-like*) entities.
  
 Due to its simplicity and **tight integration with Java 8 CompletionStage and Queue API**, JCExt might be  better choice 
-than some bloated actor frameworks which are trying to imitate all aspects of Erlang actors, introducing a lot of new API 
-and extra cognitive load.
+than some bloated actor frameworks that try to imitate all aspects of Erlang actors, introducing a lot of new API 
+and thus a lot of extra cognitive load.
 
-Simplest way to use JCExt in your project is thru https://jitpack.io
+The simplest way to use JCExt in your project is thru https://jitpack.io
 
 For gradle build: 
 ```groovy
