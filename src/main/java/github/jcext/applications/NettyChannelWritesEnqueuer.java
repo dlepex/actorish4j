@@ -14,7 +14,7 @@ import static github.jcext.JcExt.with;
 
 /**
  * Experimental.<p>
- * NettyChannelWritesEnqueuer orders writes to Netty channel and flush them when it's appropriate to do so.
+ * NettyChannelWritesEnqueuer orders writes to Netty channel and flushes them when it's appropriate to do so.
  * Note that there is no artificial delay before flushing.
  */
 public final class NettyChannelWritesEnqueuer extends Enqueuer<ByteBuf> {
