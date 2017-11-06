@@ -18,11 +18,13 @@ import static github.jcext.JcExt.doneFuture;
  * Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only the
  * <b>single consumer</b> {@link #pollAsync(Queue)} can read (poll) the queue.<p>
  * All operations in this class are non-blocking, so it doesn't need a separate thread.<p>
- * From the user point of view Enqueuer has only one method: {@link #offer(Object)} <p>
+ * From the user point of view Enqueuer has only one method: {@link #offer(Object)}, this method is thread-safe. <p>
  * <p>
  * Descendants of this class must implement {@link #pollAsync(Queue)} method. <p>
- * If you prefer lambdas instead of subclassing see {@link Poller#newEnqueuer(Poller, Conf)}<p>
- * Only poll(), offer() and isEmpty() methods of the {@link Queue} interface are used inside this class. <p>
+ * If you prefer lambdas instead of subclassing see {@link Poller#newEnqueuer(Poller, Conf)}
+ * <p>
+ * Only offer() and isEmpty() methods of the {@link Queue} interface are used inside this class.
+ * <p>
  *
  * @param <T> type of queue items
  * @see Poller#newEnqueuer(Poller, Conf)
@@ -108,8 +110,10 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * This method will be scheduled for execution, only if the queue is not empty.
 	 * It means that at least one queue.poll() must return non-null.
 	 * <p>
-	 * This method will NOT be scheduled, UNTIL the resultant CompletionStage of the previous call is completed.
-	 * This property ensures that concurrent (parallel) calls of this method are impossible. <p>
+	 * This method will NOT be called, UNTIL the resultant CompletionStage of the previous call is completed.
+	 * This property ensures that <b>concurrent (parallel) calls of this method are impossible</b>.
+	 * And also that calls respect <b>happens before</b> relation, so you can freely mutate a shared state inside this method without extra locking.
+	 * <p>
 	 * This method must be non-blocking. <p>
 	 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
 	 * <p>
@@ -117,6 +121,7 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * i.e. you should not keep/use the queue after the resultant CompletionStage is completed
 	 * <p>
 	 * You are free to call other methods of the queue in addition to poll().
+	 * <p>
 	 */
 	protected abstract CompletionStage<?> pollAsync(Queue<T> queue);
 

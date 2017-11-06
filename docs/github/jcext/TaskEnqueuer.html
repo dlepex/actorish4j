@@ -379,15 +379,18 @@ extends <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext"
 <div class="block">This method will be scheduled for execution, only if the queue is not empty.
  It means that at least one queue.poll() must return non-null.
  <p>
- This method will NOT be scheduled, UNTIL the resultant CompletionStage of the previous call is completed.
- This property ensures that concurrent (parallel) calls of this method are impossible. <p>
+ This method will NOT be called, UNTIL the resultant CompletionStage of the previous call is completed.
+ This property ensures that <b>concurrent (parallel) calls of this method are impossible</b>.
+ And also that calls respect <b>happens before</b> relation, so you can freely mutate a shared state inside this method without extra locking.
+ <p>
  This method must be non-blocking. <p>
  It may return null, which is interpreted the same as <code>CompletableFuture.completedFuture(Object)</code> (immediate completion)
  <p>
  Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
  i.e. you should not keep/use the queue after the resultant CompletionStage is completed
  <p>
- You are free to call other methods of the queue in addition to poll().</div>
+ You are free to call other methods of the queue in addition to poll().
+ <p></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../github/jcext/Enqueuer.html#pollAsync-java.util.Queue-">pollAsync</a></code>&nbsp;in class&nbsp;<code><a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;<a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext">AsyncRunnable</a>&gt;</code></dd>
