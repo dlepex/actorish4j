@@ -2,11 +2,9 @@
 
 This small library provides concurrent, asynchronous/non-blocking, stateful (in other words actor-like) entities.
  
-Due to its simplicity and **tight integration with Java 8 CompletionStage (CompletableFuture) and Queue API**, JCExt can be  better choice 
-than some bloated Actor frameworks. 
-The reason is that these frameworks try to imitate *all* aspects of Erlang actors (supervision hierarchies, networking etc) 
-so they introduce a lot of new API and thus a lot of extra cognitive load. Not to mention that at times those "imitations" are very poor
-and much worse the the original.
+Due to its simplicity and **tight integration with Java 8 CompletionStage (CompletableFuture) and Queue API**, 
+JCExt can be  better choice than some bloated Actor frameworks. If you are not interested in supervision hierarchies, 
+actor-based networking and only need the concurrency part then JCExt may be the tool for you.
 
 The simplest way to use JCExt in your project is through https://jitpack.io
 
