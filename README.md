@@ -43,7 +43,7 @@ TaskEnqueuer guarantees that:
 
 
 
-##### github.jcext.Agent https://dlepex.github.io/jcext/github/jcext/Agent.html
+##### github.jcext.Agent&lt;S&gt; https://dlepex.github.io/jcext/github/jcext/Agent.html
 
 - **Agent** implements the specific form of "locking pattern" for async computations which
 need to share a mutable state.
