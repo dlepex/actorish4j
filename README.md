@@ -22,7 +22,8 @@ Gradle build sample:
 ### Overview
 
 
-##### github.jcext.Enqueuer&lt;T&gt; https://dlepex.github.io/jcext/github/jcext/Enqueuer.html
+#### github.jcext.Enqueuer&lt;T&gt; 
+https://dlepex.github.io/jcext/github/jcext/Enqueuer.html
 
 Enqueuer is the most basic (and the most useful) form of actor-like entity. 
 
@@ -31,9 +32,10 @@ single consumer can read (poll) the queue.
 
 All other actor-like entities in this lib are implemented on top of the Enqueuer. 
 
-##### github.jcext.TaskEnqueuer https://dlepex.github.io/jcext/github/jcext/TaskEnqueuer.html
+#### github.jcext.TaskEnqueuer 
+https://dlepex.github.io/jcext/github/jcext/TaskEnqueuer.html
 
-TaskEnqueuer is the Enqueuer with the predefined poller, which polls and executes async tasks one by one.
+TaskEnqueuer is the Enqueuer which polls and executes async tasks one by one.
 
 TaskEnqueuer can be used as the direct **replacement for the single-threaded ExecutorService**, in case your tasks are asynchronous computations.
 Note that this class doesn't follow ExecutorService API deliberately because it can be misused for blocking tasks.
@@ -45,13 +47,14 @@ TaskEnqueuer guarantees that:
 
 
 
-##### github.jcext.Agent&lt;S&gt; https://dlepex.github.io/jcext/github/jcext/Agent.html
+#### github.jcext.Agent&lt;S&gt; 
+https://dlepex.github.io/jcext/github/jcext/Agent.html
 
-- **Agent** implements the specific form of "locking pattern" for async computations which
-need to share a mutable state.
-- The implementation is inspired by Elixir Agent module. It is rather trivial wrapper around the TaskEnqueuer class 
-(which in turn is the wrapper around Enqueuer)
+Agent implements the specific form of "state sharing pattern" in the context of asynchronous computations.
 
+Agent is a very simple (thin) wrapper around the TaskEnqueuer class.
+
+Agent interface (method naming) is inspired by Elixir Agent module. 
 See https://hexdocs.pm/elixir/Agent.html
 
 

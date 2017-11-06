@@ -9,7 +9,7 @@ import static github.jcext.JcExt.with;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
- * Agents provide access to shared mutable state in async fashion.
+ * Agents provide access to shared state in async fashion.
  * Use Agents when you need lock-like behaviour for your async computations.
  * <p>
  * This implementation is inspired by <a href="https://hexdocs.pm/elixir/Agent.html">Elixir Agent module</a>. <p>
