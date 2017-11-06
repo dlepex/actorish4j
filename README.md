@@ -27,8 +27,8 @@ https://dlepex.github.io/jcext/github/jcext/Enqueuer.html
 
 Enqueuer is the most basic (and the most useful) form of actor-like entity. 
 
-Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
-single consumer can read (poll) the queue.
+Enqueuer implements the multiple-producer single-consumer pattern: anyone can offer message to the Enqueuer, but only
+the single consumer can read (poll) the queue.
 
 All other actor-like entities in this lib are implemented on top of the Enqueuer. 
 
