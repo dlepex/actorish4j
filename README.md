@@ -61,11 +61,15 @@ https://dlepex.github.io/jcext/
 
 The classes below are the examples of applying JCExt to the "real world problems". 
 
-###### github.jcext.applications.NettyChannelWritesEnqueuer
+###### NettyChannelWritesEnqueuer
+
+https://github.com/dlepex/jcext/blob/master/src/main/java/github/jcext/applications/NettyChannelWritesEnqueuer.java
 
 NettyChannelWritesEnqueuer orders writes to Netty channel and flush them when it's appropriate to do so.
 
-###### github.jcext.applications.ExactDateScheduler
+###### ExactDateScheduler
+
+https://github.com/dlepex/jcext/blob/master/src/main/java/github/jcext/applications/ExactDateScheduler.java
 
 Schedules task execution at specified LocalDateTime.
 Tasks are executed sequentially one after another, their order is preserved in case of equal begin dates
