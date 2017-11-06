@@ -128,8 +128,7 @@ public interface <span class="typeNameLabel">AsyncRunnable</span></pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.util.concurrent.CompletionStage&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/AsyncRunnable.html#runAsync--">runAsync</a></span>()</code>
-<div class="block">Must be non-blocking
- It may return null, which is interpreted as <code>CompletableFuture.completedFuture(Object)</code></div>
+<div class="block">Must be non-blocking.</div>
 </td>
 </tr>
 </table>
@@ -154,8 +153,8 @@ public interface <span class="typeNameLabel">AsyncRunnable</span></pre>
 <li class="blockList">
 <h4>runAsync</h4>
 <pre>java.util.concurrent.CompletionStage&lt;?&gt;&nbsp;runAsync()</pre>
-<div class="block">Must be non-blocking
- It may return null, which is interpreted as <code>CompletableFuture.completedFuture(Object)</code></div>
+<div class="block">Must be non-blocking.
+ It may return null, which is interpreted the same as <code>CompletableFuture.completedFuture(Object)</code> (immediate completion)</div>
 </li>
 </ul>
 </li>

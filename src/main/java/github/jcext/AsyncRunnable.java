@@ -9,8 +9,8 @@ import java.util.concurrent.CompletionStage;
 @FunctionalInterface
 public interface AsyncRunnable {
 	/**
-	 * Must be non-blocking
-	 * It may return null, which is interpreted as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)}
+	 * Must be non-blocking.
+	 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
 	 */
 	CompletionStage<?> runAsync();
 
