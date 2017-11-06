@@ -1,6 +1,6 @@
 #### Purpose
 
-This small lib provides concurrent, asynchronous/non-blocking, statefull (*actor-like*) entities.
+This small lib provides concurrent, asynchronous/non-blocking, stateful (*actor-like*) entities.
  
 Due to its simplicity and **tight integration with Java 8 CompletionStage and Queue API**, JCExt might be  better choice 
 than some bloated actor frameworks that try to imitate all aspects of Erlang actors, introducing a lot of new API 
