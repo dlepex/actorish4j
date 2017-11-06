@@ -47,7 +47,6 @@ public final class NettyChannelWritesEnqueuer extends Enqueuer<ByteBuf> {
 	protected CompletionStage<?> pollAsync(Queue<ByteBuf> q) {
 		int bytesToFlush = 0;
 		int flushLimit = this.flushLimit;
-		boolean dirty = false;
 		CompletionStage<?> stage = CompletableFuture.completedFuture(null);
 		for (ByteBuf buf = q.poll(); buf != null; ) {
 			int bufSize = buf.readableBytes();
@@ -56,19 +55,14 @@ public final class NettyChannelWritesEnqueuer extends Enqueuer<ByteBuf> {
 			}
 			bytesToFlush += bufSize;
 			if (bytesToFlush <= flushLimit) {
-				dirty = true;
 				stage = doWrite(stage, buf);
 			} else {
-				dirty = false;
 				bytesToFlush = 0;
 				stage = doFlush(stage);
 				stage = doWrite(stage, buf);
 			}
 		}
-		if (dirty) {
-			stage = doFlush(stage);
-		}
-		return stage;
+		return doFlush(stage);
 	}
 
 	private CompletionStage<?> doFlush(CompletionStage<?> stage) {
