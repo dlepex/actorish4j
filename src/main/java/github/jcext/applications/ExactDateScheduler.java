@@ -2,6 +2,7 @@ package github.jcext.applications;
 
 import github.jcext.Enqueuer;
 import github.jcext.JcExt;
+import github.jcext.Poller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,6 @@ import java.util.function.Consumer;
 
 
 /**
- * Unstable API
  * Experimental, {@link Enqueuer} application to exact-date scheduling.
  */
 @SuppressWarnings("WeakerAccess")
@@ -25,12 +25,17 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 
 	public static class Conf extends Enqueuer.Conf {
 		private int plannedTasksLimit = 1024;
+		private Timer timer = Timer.defaultInstance();
 
 		public void setPlannedTasksLimit(int plannedTasksLimit) {
 			if (plannedTasksLimit < 1) {
 				throw new IllegalArgumentException();
 			}
 			this.plannedTasksLimit = plannedTasksLimit;
+		}
+
+		public void setTimer(Timer timer) {
+			this.timer = timer;
 		}
 	}
 
@@ -60,15 +65,19 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 	private final Timer timer;
 
 
-	public static ExactDateScheduler create(Timer timer, Consumer<Conf> confInit) {
-		return new ExactDateScheduler(JcExt.with(new Conf(), confInit), timer);
+
+	public ExactDateScheduler(Conf config) {
+		this.enq = Poller.newEnqueuer(this::doPoll, config);
+		this.plannedTasksLimit = config.plannedTasksLimit;
+		this.timer = config.timer;
 	}
 
-	private ExactDateScheduler(Conf c, Timer timer) {
-		this.enq = new Enqueuer<>(this::doPoll, c);
-		this.plannedTasksLimit = c.plannedTasksLimit;
-		this.timer = timer;
-		//executor.execute(this::pollingLoop);
+	public ExactDateScheduler(Consumer<Conf> configInit) {
+		this(JcExt.with(new Conf(), configInit));
+	}
+
+	public ExactDateScheduler() {
+		this(new Conf());
 	}
 
 	public void schedule(LocalDateTime beginAt, Task task) throws RejectedExecutionException {

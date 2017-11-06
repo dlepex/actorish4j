@@ -72,6 +72,10 @@
 </a>
 <h2 class="title">A</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ErlangActor.ReceiverFunc.html#after--">after()</a></span> - Method in interface github.jcext.applications.<a href="github/jcext/applications/ErlangActor.ReceiverFunc.html" title="interface in github.jcext.applications">ErlangActor.ReceiverFunc</a></dt>
+<dd>
+<div class="block">Erlang receive after-clause.</div>
+</dd>
 <dt><a href="github/jcext/Agent.html" title="class in github.jcext"><span class="typeNameLink">Agent</span></a>&lt;<a href="github/jcext/Agent.html" title="type parameter in Agent">S</a>&gt; - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
 <div class="block">Agents provide access to shared mutable state in async fashion.</div>
@@ -114,11 +118,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.Conf.html#Conf--">Conf()</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications">ExactDateScheduler.Conf</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/NettyChannelWritesEnqueuer.Conf.html#Conf--">Conf()</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/NettyChannelWritesEnqueuer.Conf.html" title="class in github.jcext.applications">NettyChannelWritesEnqueuer.Conf</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#Conf--">Conf()</a></span> - Constructor for class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/TaskEnqueuer.Conf.html#Conf--">Conf()</a></span> - Constructor for class github.jcext.<a href="github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.html#create-github.jcext.applications.Timer-java.util.function.Consumer-">create(Timer, Consumer&lt;ExactDateScheduler.Conf&gt;)</a></span> - Static method in class github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.html" title="class in github.jcext.applications">ExactDateScheduler</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.QueueFactory.html#create-int-">create(int)</a></span> - Method in interface github.jcext.<a href="github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext">Enqueuer.QueueFactory</a></dt>
 <dd>&nbsp;</dd>
@@ -151,40 +155,36 @@
 <dt><a href="github/jcext/Enqueuer.html" title="class in github.jcext"><span class="typeNameLink">Enqueuer</span></a>&lt;<a href="github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&gt; - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
 <div class="block">Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
- <b>single consumer</b> <a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><code>Enqueuer.Poller</code></a> can read (poll) it.</div>
+ <b>single consumer</b> <a href="github/jcext/Enqueuer.html#pollAsync-java.util.Queue-"><code>Enqueuer.pollAsync(Queue)</code></a> can read (poll) the queue.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#Enqueuer-github.jcext.Enqueuer.Poller-github.jcext.Enqueuer.Conf-">Enqueuer(Enqueuer.Poller&lt;T&gt;, Enqueuer.Conf)</a></span> - Constructor for class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
-<dd>
-<div class="block">Main constructor, descendant classes must use this form.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#Enqueuer-github.jcext.Enqueuer.Poller-">Enqueuer(Enqueuer.Poller&lt;T&gt;)</a></span> - Constructor for class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
-<dd>
-<div class="block">Additional Enqueuer constructor
- The constructor with default configuration: FJP thread pool and bounded queue with <a href="github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#Enqueuer-github.jcext.Enqueuer.Poller-java.util.function.Consumer-">Enqueuer(Enqueuer.Poller&lt;T&gt;, Consumer&lt;Enqueuer.Conf&gt;)</a></span> - Constructor for class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
-<dd>
-<div class="block">Additional Enqueuer constructor.</div>
-</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#Enqueuer-github.jcext.Enqueuer.Conf-">Enqueuer(Enqueuer.Conf)</a></span> - Constructor for class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext"><span class="typeNameLink">Enqueuer.Conf</span></a> - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
 <div class="block">Configuration object.</div>
-</dd>
-<dt><a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><span class="typeNameLink">Enqueuer.Poller</span></a>&lt;<a href="github/jcext/Enqueuer.Poller.html" title="type parameter in Enqueuer.Poller">T</a>&gt; - Interface in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
-<dd>
-<div class="block">Asynchronous single consumer of enqueued items.</div>
 </dd>
 <dt><a href="github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext"><span class="typeNameLink">Enqueuer.QueueFactory</span></a>&lt;<a href="github/jcext/Enqueuer.QueueFactory.html" title="type parameter in Enqueuer.QueueFactory">T</a>&gt; - Interface in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="github/jcext/applications/ErlangActor.html" title="class in github.jcext.applications"><span class="typeNameLink">ErlangActor</span></a> - Class in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ErlangActor.html#ErlangActor-github.jcext.applications.Timer-">ErlangActor(Timer)</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/ErlangActor.html" title="class in github.jcext.applications">ErlangActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="github/jcext/applications/ErlangActor.Receive.html" title="class in github.jcext.applications"><span class="typeNameLink">ErlangActor.Receive</span></a> - Class in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="github/jcext/applications/ErlangActor.ReceiverFunc.html" title="interface in github.jcext.applications"><span class="typeNameLink">ErlangActor.ReceiverFunc</span></a> - Interface in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="github/jcext/applications/ErlangActor.SpecialMsg.html" title="enum in github.jcext.applications"><span class="typeNameLink">ErlangActor.SpecialMsg</span></a> - Enum in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="github/jcext/applications/ExactDateScheduler.html" title="class in github.jcext.applications"><span class="typeNameLink">ExactDateScheduler</span></a> - Class in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
 <dd>
-<div class="block">Unstable API
- Experimental, <a href="github/jcext/Enqueuer.html" title="class in github.jcext"><code>Enqueuer</code></a> application to exact-date scheduling.</div>
+<div class="block">Experimental, <a href="github/jcext/Enqueuer.html" title="class in github.jcext"><code>Enqueuer</code></a> application to exact-date scheduling.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.html#ExactDateScheduler-github.jcext.applications.ExactDateScheduler.Conf-">ExactDateScheduler(ExactDateScheduler.Conf)</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.html" title="class in github.jcext.applications">ExactDateScheduler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.html#ExactDateScheduler-java.util.function.Consumer-">ExactDateScheduler(Consumer&lt;ExactDateScheduler.Conf&gt;)</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.html" title="class in github.jcext.applications">ExactDateScheduler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.html#ExactDateScheduler--">ExactDateScheduler()</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.html" title="class in github.jcext.applications">ExactDateScheduler</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications"><span class="typeNameLink">ExactDateScheduler.Conf</span></a> - Class in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="github/jcext/applications/ExactDateScheduler.Task.html" title="interface in github.jcext.applications"><span class="typeNameLink">ExactDateScheduler.Task</span></a> - Interface in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
@@ -257,13 +257,23 @@
 </a>
 <h2 class="title">N</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="github/jcext/Agent.html#newConf--">newConf()</a></span> - Static method in class github.jcext.<a href="github/jcext/Agent.html" title="class in github.jcext">Agent</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#newConf--">newConf()</a></span> - Static method in class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
+<dt><a href="github/jcext/applications/NettyChannelWritesEnqueuer.html" title="class in github.jcext.applications"><span class="typeNameLink">NettyChannelWritesEnqueuer</span></a> - Class in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
 <dd>
-<div class="block">Creates new config object with default settings.</div>
+<div class="block">Experimental.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/NettyChannelWritesEnqueuer.html#NettyChannelWritesEnqueuer-io.netty.channel.Channel-github.jcext.applications.NettyChannelWritesEnqueuer.Conf-">NettyChannelWritesEnqueuer(Channel, NettyChannelWritesEnqueuer.Conf)</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/NettyChannelWritesEnqueuer.html" title="class in github.jcext.applications">NettyChannelWritesEnqueuer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/NettyChannelWritesEnqueuer.html#NettyChannelWritesEnqueuer-io.netty.channel.Channel-">NettyChannelWritesEnqueuer(Channel)</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/NettyChannelWritesEnqueuer.html" title="class in github.jcext.applications">NettyChannelWritesEnqueuer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="github/jcext/applications/NettyChannelWritesEnqueuer.Conf.html" title="class in github.jcext.applications"><span class="typeNameLink">NettyChannelWritesEnqueuer.Conf</span></a> - Class in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/TaskEnqueuer.html#newConf--">newConf()</a></span> - Static method in class github.jcext.<a href="github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/Poller.html#newEnqueuer-github.jcext.Poller-github.jcext.Enqueuer.Conf-">newEnqueuer(Poller&lt;T&gt;, Enqueuer.Conf)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Poller.html" title="interface in github.jcext">Poller</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/Poller.html#newEnqueuer-github.jcext.Poller-">newEnqueuer(Poller&lt;T&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Poller.html" title="interface in github.jcext">Poller</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/Poller.html#newEnqueuer-github.jcext.Poller-java.util.function.Consumer-">newEnqueuer(Poller&lt;T&gt;, Consumer&lt;Enqueuer.Conf&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Poller.html" title="interface in github.jcext">Poller</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/internal/JcExtQueueProvider.html#newPreallocatedQueue-int-">newPreallocatedQueue(int)</a></span> - Method in class github.jcext.internal.<a href="github/jcext/internal/JcExtQueueProvider.html" title="class in github.jcext.internal">JcExtQueueProvider</a></dt>
 <dd>&nbsp;</dd>
@@ -277,7 +287,7 @@
 <dl>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#offer-T-">offer(T)</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
 <dd>
-<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="github/jcext/Enqueuer.Poller.html#pollAsync-java.util.Queue-"><code>Enqueuer.Poller.pollAsync(Queue)</code></a> execution.</div>
+<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="github/jcext/Poller.html#pollAsync-java.util.Queue-"><code>Poller.pollAsync(Queue)</code></a> execution.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/TaskEnqueuer.html#offerCall-github.jcext.AsyncCallable-">offerCall(AsyncCallable&lt;V&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></dt>
 <dd>&nbsp;</dd>
@@ -291,17 +301,31 @@
 </a>
 <h2 class="title">P</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Poller.html#pollAsync-java.util.Queue-">pollAsync(Queue&lt;T&gt;)</a></span> - Method in interface github.jcext.<a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a></dt>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/NettyChannelWritesEnqueuer.html#pollAsync-java.util.Queue-">pollAsync(Queue&lt;ByteBuf&gt;)</a></span> - Method in class github.jcext.applications.<a href="github/jcext/applications/NettyChannelWritesEnqueuer.html" title="class in github.jcext.applications">NettyChannelWritesEnqueuer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#pollAsync-java.util.Queue-">pollAsync(Queue&lt;T&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
 <dd>
 <div class="block">This method will be scheduled for execution, only if the queue is not empty.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Poller.html#pollByChunk-int-java.util.function.Function-">pollByChunk(int, Function&lt;List&lt;T&gt;, CompletionStage&lt;?&gt;&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a></dt>
+<dt><span class="memberNameLink"><a href="github/jcext/Poller.html#pollAsync-java.util.Queue-">pollAsync(Queue&lt;T&gt;)</a></span> - Method in interface github.jcext.<a href="github/jcext/Poller.html" title="interface in github.jcext">Poller</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/TaskEnqueuer.html#pollAsync-java.util.Queue-">pollAsync(Queue&lt;AsyncRunnable&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/Poller.html#pollByChunk-int-java.util.function.Function-">pollByChunk(int, Function&lt;List&lt;T&gt;, CompletionStage&lt;?&gt;&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Poller.html" title="interface in github.jcext">Poller</a></dt>
 <dd>
 <div class="block">Creates Poller that polls by chunk.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Poller.html#pollByOne-java.util.function.Function-">pollByOne(Function&lt;T, CompletionStage&lt;?&gt;&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a></dt>
+<dt><span class="memberNameLink"><a href="github/jcext/Poller.html#pollByOne-java.util.function.Function-">pollByOne(Function&lt;T, CompletionStage&lt;?&gt;&gt;)</a></span> - Static method in interface github.jcext.<a href="github/jcext/Poller.html" title="interface in github.jcext">Poller</a></dt>
 <dd>
 <div class="block">Creates Poller that polls by one.</div>
+</dd>
+<dt><a href="github/jcext/Poller.html" title="interface in github.jcext"><span class="typeNameLink">Poller</span></a>&lt;<a href="github/jcext/Poller.html" title="type parameter in Poller">T</a>&gt; - Interface in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
+<dd>
+<div class="block">This interface provides alternative (lambda-friendly) ways to create <a href="github/jcext/Enqueuer.html" title="class in github.jcext"><code>Enqueuer</code></a> instances.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/JcExt.html#pollMany-int-java.util.Queue-java.util.function.Consumer-">pollMany(int, Queue&lt;? extends T&gt;, Consumer&lt;? super T&gt;)</a></span> - Static method in class github.jcext.<a href="github/jcext/JcExt.html" title="class in github.jcext">JcExt</a></dt>
+<dd>
+<div class="block">Polls until q.poll() returns null or max elements reached.</div>
 </dd>
 </dl>
 <a name="I:R">
@@ -310,6 +334,14 @@
 <h2 class="title">R</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.Task.Info.html#realBegin--">realBegin()</a></span> - Method in interface github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.Task.Info.html" title="interface in github.jcext.applications">ExactDateScheduler.Task.Info</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ErlangActor.html#receive-github.jcext.applications.ErlangActor.ReceiverFunc-">receive(ErlangActor.ReceiverFunc)</a></span> - Method in class github.jcext.applications.<a href="github/jcext/applications/ErlangActor.html" title="class in github.jcext.applications">ErlangActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ErlangActor.html#receive-github.jcext.applications.ErlangActor.ReceiverFunc-int-">receive(ErlangActor.ReceiverFunc, int)</a></span> - Method in class github.jcext.applications.<a href="github/jcext/applications/ErlangActor.html" title="class in github.jcext.applications">ErlangActor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ErlangActor.Receive.html#Receive--">Receive()</a></span> - Constructor for class github.jcext.applications.<a href="github/jcext/applications/ErlangActor.Receive.html" title="class in github.jcext.applications">ErlangActor.Receive</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ErlangActor.ReceiverFunc.html#receive-java.lang.Object-">receive(Object)</a></span> - Method in interface github.jcext.applications.<a href="github/jcext/applications/ErlangActor.ReceiverFunc.html" title="interface in github.jcext.applications">ErlangActor.ReceiverFunc</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.Task.html#run-github.jcext.applications.ExactDateScheduler.Task.Info-">run(ExactDateScheduler.Task.Info)</a></span> - Method in interface github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.Task.html" title="interface in github.jcext.applications">ExactDateScheduler.Task</a></dt>
 <dd>&nbsp;</dd>
@@ -336,7 +368,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-">setBoundedQueue(int)</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
-<div class="block">By default queue is bounded with max size equal to <a href="github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
+<div class="block">By default the queue is bounded and its max size equal to <a href="github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#setCustomQueue-github.jcext.Enqueuer.QueueFactory-">setCustomQueue(Enqueuer.QueueFactory&lt;T&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
@@ -358,10 +390,14 @@
 <dd>
 <div class="block">Default pool is FJP.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.Conf.html#setTimer-github.jcext.applications.Timer-">setTimer(Timer)</a></span> - Method in class github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications">ExactDateScheduler.Conf</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#setUnboundedQueue--">setUnboundedQueue()</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
 <div class="block">This option is discouraged, most users should use bounded queues.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="github/jcext/applications/ErlangActor.html#start--">start()</a></span> - Method in class github.jcext.applications.<a href="github/jcext/applications/ErlangActor.html" title="class in github.jcext.applications">ErlangActor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Agent.StateValuePair.html#state">state</a></span> - Variable in class github.jcext.<a href="github/jcext/Agent.StateValuePair.html" title="class in github.jcext">Agent.StateValuePair</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Agent.StateValuePair.html#StateValuePair-S-V-">StateValuePair(S, V)</a></span> - Constructor for class github.jcext.<a href="github/jcext/Agent.StateValuePair.html" title="class in github.jcext">Agent.StateValuePair</a></dt>
@@ -397,8 +433,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="github/jcext/applications/Timer.html" title="interface in github.jcext.applications"><span class="typeNameLink">Timer</span></a> - Interface in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
 <dd>
-<div class="block">Unstable API
- Timer is not used in the core of this lib (only in applications)</div>
+<div class="block">Unstable API.</div>
 </dd>
 <dt><a href="github/jcext/applications/Timer.DefaultImpl.html" title="class in github.jcext.applications"><span class="typeNameLink">Timer.DefaultImpl</span></a> - Class in <a href="github/jcext/applications/package-summary.html">github.jcext.applications</a></dt>
 <dd>&nbsp;</dd>
@@ -408,6 +443,10 @@
 </a>
 <h2 class="title">U</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="github/jcext/Agent.html#underlyingEnq--">underlyingEnq()</a></span> - Method in class github.jcext.<a href="github/jcext/Agent.html" title="class in github.jcext">Agent</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.html#underlyingEnq--">underlyingEnq()</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Agent.html#update-java.util.function.Function-">update(Function&lt;? super S, ? extends S&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/Agent.html" title="class in github.jcext">Agent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Agent.html#updateAsync-java.util.function.Function-">updateAsync(Function&lt;? super S, ? extends CompletionStage&lt;? extends S&gt;&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/Agent.html" title="class in github.jcext">Agent</a></dt>

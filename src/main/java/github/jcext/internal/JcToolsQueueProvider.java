@@ -15,8 +15,9 @@ public final class JcToolsQueueProvider extends JcExtQueueProvider {
 	}
 
 	/**
-	 * This class delegates all methods to MpmcArrayQueue, except isEmpty() which was redefined in terms of peek().
-	 */
+	 * This class delegates all methods to MpmcArrayQueue, except isEmpty() which was redefined in terms of peek(). <p>
+	 * The reason is that {@code peek()==null} was tested and works as intended, but {@link MpmcArrayQueue#isEmpty()} may be too imprecise for our needs.
+ 	 */
 	private final class JcToolsQueue<E> extends AbstractQueue<E> {
 
 		private final MpmcArrayQueue<E> q;

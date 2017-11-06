@@ -10,14 +10,12 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * Agents provide access to shared mutable state in async fashion.
- * When to use Agents: when you need lock-like behaviour for your async computations.
- * It's impossible to get the state of agent synchronously, only thru the Future.
+ * Use Agents when you need lock-like behaviour for your async computations.
  * <p>
- * This implementation is inspired by Elixir Agents: https://hexdocs.pm/elixir/Agent.html
+ * This implementation is inspired by <a href="https://hexdocs.pm/elixir/Agent.html">Elixir Agent module</a>. <p>
  * Clojure Agents are different (more limited), aside from the fact that they can participate in STM
  * <p>
- * <p>
- * Be careful, all methods in this class may throw RejectedExecutionException, if queue overflows
+ * Be careful, all methods in this class may throw RejectedExecutionException, if queue overflows!
  *
  * @param <S> state type. It's recommended for S to be immutable
  */
@@ -31,17 +29,12 @@ public final class Agent<S> extends EnqueuerBasedEntity {
 	 */
 	private S state;
 
-	public static TaskEnqueuer.Conf newConf() {
-		return TaskEnqueuer.newConf();
-	}
-
-
 	public Agent(S initialState) {
-		this(initialState, newConf());
+		this(initialState, new TaskEnqueuer.Conf());
 	}
 
 	public Agent(S initialState, Consumer<TaskEnqueuer.Conf> configInit) {
-		this(initialState, with(newConf(), configInit));
+		this(initialState, with(new TaskEnqueuer.Conf(), configInit));
 	}
 
 	public Agent(S initialState, TaskEnqueuer.Conf config) {
@@ -89,6 +82,7 @@ public final class Agent<S> extends EnqueuerBasedEntity {
 		return getAndUpdateAsync(st -> completedFuture(modifierFn.apply(st)));
 	}
 
+
 	@Override
 	protected Enqueuer<?> underlyingEnq() {
 		return enq;
@@ -103,5 +97,5 @@ public final class Agent<S> extends EnqueuerBasedEntity {
 			this.value = value;
 		}
 	}
-
 }
+

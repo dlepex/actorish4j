@@ -6,8 +6,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Unstable API
- * Timer is not used in the core of this lib (only in applications)
+ * Unstable API.
+ * Timeout/delays abstraction.
  */
 @FunctionalInterface
 public interface Timer {

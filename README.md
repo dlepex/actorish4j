@@ -1,19 +1,17 @@
 #### Purpose
 
-This small lib provides async/non-blocking actor-like entities.
+This small lib provides concurrent, asynchronous, statefull (actor-like) entities: Enqueuer, TaskEnqueuer and Agent.
  
-Due to its simplicity and **tight integration with Java 8 CompletionStage/CompletableFuture API**, JCExt might be  better choice 
-than Akka for cases where you do not need the full Erlang system imitation. 
-
-Besides one may argue that the untyped nature of Erlang actors is 
-not the best fit for the strictly typed languages like Java.
+Due to its simplicity and **tight integration with Java 8 CompletionStage and Queue API**, JCExt might be  better choice 
+than some bloated actor frameworks which are trying to imitate all aspects of Erlang actors, introducing a lot of new API 
+and extra cognitive load.
 
 Simplest way to use JCExt in your project is thru https://jitpack.io
 
 For gradle build: 
 ```groovy
 	dependencies {
-		compile 'com.github.dlepex:jcext:v0.6'
+		compile 'com.github.dlepex:jcext:v0.7'
 
 		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
 		// JCExt may use JCTools MpmcArrayQueue, if it detects its presence
@@ -21,15 +19,15 @@ For gradle build:
 ```
 #### Overview
 
+
 ##### github.jcext.Enqueuer&lt;T&gt; https://dlepex.github.io/jcext/github/jcext/Enqueuer.html
 
-Enqueuer is the most basic form of actor-like entity: it is the queue + associated asynchronous consumer aka  **Poller**.
+Enqueuer is the most basic (and the most useful) form of actor-like entity. 
+
+Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
+single consumer can read (poll) the queue.
 
 All other actor-like entities in this lib are implemented on top of the Enqueuer. 
-
-So if you want to read some code, read the code of this class first.
-
-
 
 ##### github.jcext.TaskEnqueuer https://dlepex.github.io/jcext/github/jcext/TaskEnqueuer.html
 
@@ -55,6 +53,17 @@ need to share a mutable state.
 See https://hexdocs.pm/elixir/Agent.html
 
 
+#### Javadoc
+
+https://dlepex.github.io/jcext/
+
+#### Showcases
+
+The classes below are the examples of applying JCExt to the "real world problems". 
+
+###### github.jcext.applications.NettyChannelWritesEnqueuer
+
+NettyChannelWritesEnqueuer orders writes to Netty channel and flush them when it's appropriate to do so.
 
 ###### github.jcext.applications.ExactDateScheduler
 
@@ -62,6 +71,3 @@ Schedules task execution at specified LocalDateTime.
 Tasks are executed sequentially one after another, their order is preserved in case of equal begin dates
 
 
-#### Javadoc
-
-https://dlepex.github.io/jcext/

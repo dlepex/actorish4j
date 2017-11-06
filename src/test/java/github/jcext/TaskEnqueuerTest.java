@@ -111,21 +111,21 @@ public class TaskEnqueuerTest {
 
 	@Test
 	void testConf() {
-		Enqueuer.Conf c1 = Enqueuer.newConf();
+		Enqueuer.Conf c1 = new Enqueuer.Conf();
 		c1.useLockFreeQueue();
 		c1.setBoundedQueue(10000);
 		assertThrows(RuntimeException.class, c1::chooseQueueImpl);
 
-		Enqueuer.Conf c = Enqueuer.newConf();
+		Enqueuer.Conf c = new Enqueuer.Conf();
 		c.setBoundedQueue(10_000);
 		assertEquals(c.chooseQueueImpl().getClass(), LinkedBlockingQueue.class);
 
-		c = Enqueuer.newConf();
+		c = new Enqueuer.Conf();
 		c.setBoundedQueue(10_000);
 		c.usePreallocatedQueue();
 		assertEquals(c.chooseQueueImpl().getClass(), ArrayBlockingQueue.class);
 
-		c = Enqueuer.newConf();
+		c = new Enqueuer.Conf();
 		c.setUnboundedQueue();
 		assertEquals(c.chooseQueueImpl().getClass(), ConcurrentLinkedQueue.class);
 	}

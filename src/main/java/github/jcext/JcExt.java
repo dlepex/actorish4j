@@ -17,7 +17,9 @@ public final class JcExt {
 	private JcExt() {
 	}
 
-	private static final JcExtQueueProvider qp;
+	private static final JcExtQueueProvider queueProvider;
+
+	static final boolean jcToolsFound;
 
 	static {
 		boolean jcToolsPresent = false;
@@ -29,7 +31,7 @@ public final class JcExt {
 			// ignored
 		}
 		try {
-			qp = jcToolsPresent ?
+			queueProvider = jcToolsPresent ?
 					(JcExtQueueProvider) Class.forName("github.jcext.internal.JcToolsQueueProvider").newInstance()
 					: new JcExtQueueProvider();
 
@@ -37,19 +39,28 @@ public final class JcExt {
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
+
+		jcToolsFound = jcToolsPresent;
 	}
 
 	static <T> Queue<T> newPreallocatedQueue(int cap) {
-		return qp.newPreallocatedQueue(cap);
+		return queueProvider.newPreallocatedQueue(cap);
 	}
 
-	static boolean isUsingJcTools() {
-		return qp.getClass() != JcExtQueueProvider.class;
-	}
 
 	public static <T> T with(T t, Consumer<? super T> scope) {
 		scope.accept(t);
 		return t;
+	}
+
+	/**
+	 * Polls until q.poll() returns null or max elements reached.
+	 */
+	public static <T> void pollMany(int maxElements, Queue<? extends T> q, Consumer<? super T> c) {
+		assert maxElements > 0;
+		for(T item = q.poll(); item != null && maxElements > 0; -- maxElements) {
+			c.accept(item);
+		}
 	}
 
 

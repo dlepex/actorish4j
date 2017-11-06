@@ -4,33 +4,31 @@ package github.jcext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static github.jcext.JcExt.doneFuture;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
- * <b>single consumer</b> {@link Poller} can read (poll) it.<p>
- * All operations in this class are non-blocking, and the poller doesn't need a separate thread.<p>
- * From the user point of view this class has only one method: {@link #offer(Object)} <p>
+ * <b>single consumer</b> {@link #pollAsync(Queue)} can read (poll) the queue.<p>
+ * All operations in this class are non-blocking, so it doesn't need a separate thread.<p>
+ * From the user point of view Enqueuer has only one method: {@link #offer(Object)} <p>
  * <p>
- * Only poll(), offer() and isEmpty() methods of the {@link Queue} interface are used in this class. <p>
- * <p>
- * This class may be inherited, if its {@link #offer(Object)} final method makes sense for the descendants.
- * In other cases prefer composition <p>
+ * Descendants of this class must implement {@link #pollAsync(Queue)} method. <p>
+ * If you prefer lambdas instead of subclassing see {@link Poller#newEnqueuer(Poller, Conf)}<p>
+ * Only poll(), offer() and isEmpty() methods of the {@link Queue} interface are used inside this class. <p>
  *
  * @param <T> type of queue items
- * @see Poller
+ * @see Poller#newEnqueuer(Poller, Conf)
  */
 @SuppressWarnings("WeakerAccess")
-public class Enqueuer<T> extends EnqueuerBasedEntity {
+public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	/**
 	 * Default bounded queue capacity.
 	 * Use system property {@code "jcext.enq.defaultCap"} to change it.
@@ -49,39 +47,12 @@ public class Enqueuer<T> extends EnqueuerBasedEntity {
 	private final Object id;
 	private final Executor maybeSameThread;
 
-	/**
-	 * Creates new config object with default settings.
-	 */
-	public static Conf newConf() {
-		return new Conf();
-	}
-
-	/**
-	 * Main constructor, descendant classes must use this form.
-	 */
-	public Enqueuer(Poller<T> poller, Conf config) {
-		this(config.chooseQueueImpl(), config.threadPool, config.id, requireNonNull(poller), config.sameThreadOpt);
-	}
-
-	/**
-	 * Additional Enqueuer constructor
-	 * The constructor with default configuration: FJP thread pool and bounded queue with {@link Enqueuer#defaultCapacity}.
-	 */
-	@SuppressWarnings("all")
-	public Enqueuer(Enqueuer.Poller<T> poller) {
-		this(poller, Enqueuer.Conf.Default);
-	}
-
-	/**
-	 * Additional Enqueuer constructor.
-	 * This form of constructor can save you a few lines of code: you don't need to create {@link Enqueuer.Conf} object yourself.
-	 */
-	public Enqueuer(Enqueuer.Poller<T> poller, Consumer<Enqueuer.Conf> configInit) {
-		this(poller, JcExt.with(Enqueuer.newConf(), configInit));
+	protected Enqueuer(Conf config) {
+		this(config.chooseQueueImpl(), config.threadPool, config.id, config.sameThreadOpt);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Enqueuer(Queue<T> q, Executor threadPool, Object id, Poller<T> poller, boolean sameThredOpt) {
+	private Enqueuer(Queue<T> q, Executor threadPool, Object id, boolean sameThredOpt) {
 		this.queue = q;
 		this.id = id;
 		this.maybeSameThread = sameThredOpt ? sameThreadExecutor : threadPool;
@@ -92,7 +63,7 @@ public class Enqueuer<T> extends EnqueuerBasedEntity {
 				planExecution(threadPool);
 			}
 		};
-		this.queuePollRunnable = () -> runSafely(poller).whenComplete(pollNextIfExists);
+		this.queuePollRunnable = () -> doPollAsync().whenComplete(pollNextIfExists);
 	}
 
 
@@ -111,7 +82,6 @@ public class Enqueuer<T> extends EnqueuerBasedEntity {
 		return true;
 	}
 
-
 	private void planExecution(Executor exec) {
 		if (planned.compareAndSet(false, true)) {
 			try {
@@ -124,67 +94,32 @@ public class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 	}
 
-	private CompletionStage<?> runSafely(Poller<T> task) {
+	private CompletionStage<?> doPollAsync() {
 		try {
-			CompletionStage<?> result = task.pollAsync(queue);
+			CompletionStage<?> result = pollAsync(queue);
 			return result != null ? result : doneFuture;
 		} catch (Exception e) {
-			log.error(errorMessage("uncaught Poller error"), e);
+			log.error(errorMessage("uncaught pollAsync error"), e);
 			return doneFuture;
 		}
 	}
 
-
 	/**
-	 * Asynchronous single consumer of enqueued items.
-	 *
-	 * @param <T>
+	 * This method will be scheduled for execution, only if the queue is not empty.
+	 * It means that at least one queue.poll() must return non-null.
+	 * <p>
+	 * This method will NOT be scheduled, UNTIL the resultant CompletionStage of the previous call is completed.
+	 * This property ensures that concurrent (parallel) calls of this method are impossible. <p>
+	 * This method must be non-blocking. <p>
+	 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
+	 * <p>
+	 * Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
+	 * i.e. you should not keep/use the queue after the resultant CompletionStage is completed
+	 * <p>
+	 * You are free to call other methods of the queue in addition to poll().
 	 */
-	@FunctionalInterface
-	public interface Poller<T> {
-		/**
-		 * This method will be scheduled for execution, only if the queue is not empty.
-		 * It means that at least one queue.poll() must return non-null.
-		 * <p>
-		 * This method will NOT be scheduled, UNTIL the resultant CompletionStage of the previous call is completed.
-		 * This property ensures that concurrent (parallel) polls are impossible and that the poller is really a SINGLE consumer. <p>
-		 * This method must be non-blocking. <p>
-		 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
-		 * <p>
-		 * Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
-		 * i.e. you should not keep/use the queue after the resultant CompletionStage is completed
-		 */
-		CompletionStage<?> pollAsync(Queue<T> queue);
+	protected abstract CompletionStage<?> pollAsync(Queue<T> queue);
 
-
-		/**
-		 * Creates Poller that polls by one.
-		 */
-		static <T> Poller<T> pollByOne(Function<T, CompletionStage<?>> receiverFun) {
-			requireNonNull(receiverFun);
-			return q -> receiverFun.apply(q.poll());
-		}
-
-		/**
-		 * Creates Poller that polls by chunk.
-		 */
-		static <T> Poller<T> pollByChunk(int maxChunkSize, Function<List<T>, CompletionStage<?>> receiverFun) {
-			if (maxChunkSize <= 0) throw new IllegalArgumentException();
-			requireNonNull(receiverFun);
-			ArrayList<T> chunk = new ArrayList<>();
-			return q -> {
-				chunk.clear();
-				T item;
-				while ((item = q.poll()) != null) {
-					chunk.add(item);
-					if (chunk.size() >= maxChunkSize) {
-						break;
-					}
-				}
-				return receiverFun.apply(chunk);
-			};
-		}
-	}
 
 	private String errorMessage(String err) {
 		return toString() + " : " + err;
@@ -204,17 +139,16 @@ public class Enqueuer<T> extends EnqueuerBasedEntity {
 	}
 
 
+	private static final Conf defaultConfig = new Conf();
+
 	/**
 	 * Configuration object.
-	 * <p>
-	 * In theory this class should have type argument, but typed config objects feels like an overkill.
 	 */
 	public static class Conf {
 
-		static final Conf Default = new Conf();
 
 		/**
-		 * By default queue is bounded with max size equal to {@link #defaultCapacity}
+		 * By default the queue is bounded and its max size equal to {@link #defaultCapacity}
 		 *
 		 * @param capacity max queue size.
 		 */
@@ -339,7 +273,7 @@ public class Enqueuer<T> extends EnqueuerBasedEntity {
 			}
 			if (cap > 0) { // bounded case
 				if (useLockFreeQueue) {
-					if (!JcExt.isUsingJcTools()) {
+					if (!JcExt.jcToolsFound) {
 						throw new IllegalStateException("To use lock free bounded queue you must include dependency: org.jctools:jctools-core:2.1.1+");
 					}
 					if (!usePreallocatedQueue) {

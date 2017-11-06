@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9};
+var methods = {"i0":9,"i1":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../github/jcext/Poller.html" title="interface in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../index.html?github/jcext/JcExt.html" target="_top">Frames</a></li>
@@ -128,6 +128,14 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static &lt;T&gt;&nbsp;void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/JcExt.html#pollMany-int-java.util.Queue-java.util.function.Consumer-">pollMany</a></span>(int&nbsp;maxElements,
+        java.util.Queue&lt;? extends T&gt;&nbsp;q,
+        java.util.function.Consumer&lt;? super T&gt;&nbsp;c)</code>
+<div class="block">Polls until q.poll() returns null or max elements reached.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/JcExt.html#with-T-java.util.function.Consumer-">with</a></span>(T&nbsp;t,
     java.util.function.Consumer&lt;? super T&gt;&nbsp;scope)</code>&nbsp;</td>
@@ -138,7 +146,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -159,11 +167,23 @@ extends java.lang.Object</pre>
 </a><a name="with-T-java.util.function.Consumer-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>with</h4>
 <pre>public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;with(T&nbsp;t,
                          java.util.function.Consumer&lt;? super T&gt;&nbsp;scope)</pre>
+</li>
+</ul>
+<a name="pollMany-int-java.util.Queue-java.util.function.Consumer-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>pollMany</h4>
+<pre>public static&nbsp;&lt;T&gt;&nbsp;void&nbsp;pollMany(int&nbsp;maxElements,
+                                java.util.Queue&lt;? extends T&gt;&nbsp;q,
+                                java.util.function.Consumer&lt;? super T&gt;&nbsp;c)</pre>
+<div class="block">Polls until q.poll() returns null or max elements reached.</div>
 </li>
 </ul>
 </li>
@@ -194,7 +214,7 @@ extends java.lang.Object</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../github/jcext/Poller.html" title="interface in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../index.html?github/jcext/JcExt.html" target="_top">Frames</a></li>

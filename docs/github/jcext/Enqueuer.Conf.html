@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../github/jcext/Enqueuer.html" title="class in github.jcext"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../index.html?github/jcext/Enqueuer.Conf.html" target="_top">Frames</a></li>
@@ -107,7 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications">ExactDateScheduler.Conf</a>, <a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></dd>
+<dd><a href="../../github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications">ExactDateScheduler.Conf</a>, <a href="../../github/jcext/applications/NettyChannelWritesEnqueuer.Conf.html" title="class in github.jcext.applications">NettyChannelWritesEnqueuer.Conf</a>, <a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></dd>
 </dl>
 <dl>
 <dt>Enclosing class:</dt>
@@ -117,9 +117,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public static class <span class="typeNameLabel">Enqueuer.Conf</span>
 extends java.lang.Object</pre>
-<div class="block">Configuration object.
- <p>
- In theory this class should have type argument, but typed config objects feels like an overkill.</div>
+<div class="block">Configuration object.</div>
 </li>
 </ul>
 </div>
@@ -170,7 +168,7 @@ extends java.lang.Object</pre>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-">setBoundedQueue</a></span>(int&nbsp;capacity)</code>
-<div class="block">By default queue is bounded with max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
+<div class="block">By default the queue is bounded and its max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -219,7 +217,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -259,7 +257,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>setBoundedQueue</h4>
 <pre>public&nbsp;void&nbsp;setBoundedQueue(int&nbsp;capacity)</pre>
-<div class="block">By default queue is bounded with max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
+<div class="block">By default the queue is bounded and its max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>capacity</code> - max queue size.</dd>
@@ -404,7 +402,7 @@ extends java.lang.Object</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../github/jcext/Enqueuer.html" title="class in github.jcext"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../index.html?github/jcext/Enqueuer.Conf.html" target="_top">Frames</a></li>

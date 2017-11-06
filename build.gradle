@@ -9,17 +9,27 @@ sourceCompatibility = '1.8'
 
 
 
+
+def nettyVersion = '4.1.16.Final'
+
 dependencies {
-    compileOnly 'org.jctools:jctools-core:2.1.1'
+
     compile 'org.slf4j:slf4j-api:1.7.21'
 
     testCompile 'org.testng:testng:6.10'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    // optional for core library
+    compileOnly 'org.jctools:jctools-core:2.1.1'
+
+    // optional for applications:
+    compileOnly group: 'io.netty', name: 'netty-buffer', version: nettyVersion
+    compileOnly group: 'io.netty', name: 'netty-handler', version: nettyVersion
 }
 
 javadoc {
     destinationDir = new File("${projectDir}/docs")
     options.noTimestamp = true
-    options.memberLevel = JavadocMemberLevel.PUBLIC
+    options.memberLevel = JavadocMemberLevel.PROTECTED
 }
 

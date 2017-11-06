@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.RejectedExecutionException;
@@ -35,12 +36,12 @@ public final class TaskEnqueuer extends Enqueuer<AsyncRunnable> {
 	}
 
 	public TaskEnqueuer(Conf config) {
-		super(q -> q.poll().runAsync(), config);
+		super(config);
 		this.rejectsListener = config.rejectsListener;
 	}
 
 	public TaskEnqueuer() {
-		this(Conf.Default);
+		this(defaultConfig);
 	}
 
 	/**
@@ -108,6 +109,10 @@ public final class TaskEnqueuer extends Enqueuer<AsyncRunnable> {
 		}
 	}
 
+	@Override
+	protected CompletionStage<?> pollAsync(Queue<AsyncRunnable> queue) {
+		return queue.poll().runAsync();
+	}
 
 	/**
 	 * This hook may be helpful if you need to count how many times RejectedExecutionException was thrown
@@ -119,15 +124,16 @@ public final class TaskEnqueuer extends Enqueuer<AsyncRunnable> {
 		void onReject(Object id);
 	}
 
-	private static final RejectsListener EmptyListener = id -> {
+	private static final RejectsListener emptyListener = id -> {
 	};
 
+	private static final Conf defaultConfig = new Conf();
 	/**
 	 * {@inheritDoc}
 	 */
 	public static class Conf extends Enqueuer.Conf {
-		private RejectsListener rejectsListener = EmptyListener;
-		private static final Conf Default = new Conf();
+		private RejectsListener rejectsListener = emptyListener;
+
 
 		/**
 		 * For logging/monitoring usage only.

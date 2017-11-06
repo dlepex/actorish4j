@@ -91,14 +91,14 @@
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext">Enqueuer.Poller</a>&lt;T&gt;</td>
-<td class="colLast">
-<div class="block">Asynchronous single consumer of enqueued items.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><a href="../../github/jcext/Enqueuer.QueueFactory.html" title="interface in github.jcext">Enqueuer.QueueFactory</a>&lt;T&gt;</td>
 <td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="../../github/jcext/Poller.html" title="interface in github.jcext">Poller</a>&lt;T&gt;</td>
+<td class="colLast">
+<div class="block">This interface provides alternative (lambda-friendly) ways to create <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext"><code>Enqueuer</code></a> instances.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><a href="../../github/jcext/TaskEnqueuer.RejectsListener.html" title="interface in github.jcext">TaskEnqueuer.RejectsListener</a></td>
@@ -132,7 +132,7 @@
 <td class="colFirst"><a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;T&gt;</td>
 <td class="colLast">
 <div class="block">Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
- <b>single consumer</b> <a href="../../github/jcext/Enqueuer.Poller.html" title="interface in github.jcext"><code>Enqueuer.Poller</code></a> can read (poll) it.</div>
+ <b>single consumer</b> <a href="../../github/jcext/Enqueuer.html#pollAsync-java.util.Queue-"><code>Enqueuer.pollAsync(Queue)</code></a> can read (poll) the queue.</div>
 </td>
 </tr>
 <tr class="rowColor">

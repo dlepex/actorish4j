@@ -20,7 +20,12 @@ public abstract class ErlangActor {
 	private final Timer timer;
 
 	protected ErlangActor( Timer timer) {
-		enq = new Enqueuer<>(this::actorLogic);
+		enq = new Enqueuer<Object>(new Enqueuer.Conf()) {
+			@Override
+			protected CompletionStage<?> pollAsync(Queue queue) {
+				return actorLogic(queue);
+			}
+		};
 		this.timer = Objects.requireNonNull(timer);
 	}
 
