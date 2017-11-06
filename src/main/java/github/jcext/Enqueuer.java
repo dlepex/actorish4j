@@ -15,7 +15,7 @@ import java.util.function.UnaryOperator;
 import static github.jcext.JcExt.doneFuture;
 
 /**
- * Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only
+ * Enqueuer implements multiple-producer single-consumer pattern, anyone can offer message to the Enqueuer, but only the
  * <b>single consumer</b> {@link #pollAsync(Queue)} can read (poll) the queue.<p>
  * All operations in this class are non-blocking, so it doesn't need a separate thread.<p>
  * From the user point of view Enqueuer has only one method: {@link #offer(Object)} <p>
