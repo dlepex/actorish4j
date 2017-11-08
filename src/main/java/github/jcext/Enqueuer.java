@@ -70,7 +70,7 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 
 
 	/**
-	 * This method just calls {@link Queue#offer(Object)}, and possibly schedules {@link Poller#pollAsync(Queue)} execution.
+	 * This method just calls {@link Queue#offer(Object)}, and possibly schedules {@link #pollAsync(Queue)} execution.
 	 *
 	 * @return what {@link Queue#offer(Object)} returns, {@code false} means queue overflow for bounded queues. <p>
 	 * @see Queue#offer(Object)

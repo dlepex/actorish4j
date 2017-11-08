@@ -223,7 +223,7 @@ extends java.lang.Object</pre>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.html#offer-T-">offer</a></span>(<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&nbsp;t)</code>
-<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="../../github/jcext/Poller.html#pollAsync-java.util.Queue-"><code>Poller.pollAsync(Queue)</code></a> execution.</div>
+<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="../../github/jcext/Enqueuer.html#pollAsync-java.util.Queue-"><code>pollAsync(Queue)</code></a> execution.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -308,7 +308,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>offer</h4>
 <pre>public final&nbsp;boolean&nbsp;offer(<a href="../../github/jcext/Enqueuer.html" title="type parameter in Enqueuer">T</a>&nbsp;t)</pre>
-<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="../../github/jcext/Poller.html#pollAsync-java.util.Queue-"><code>Poller.pollAsync(Queue)</code></a> execution.</div>
+<div class="block">This method just calls <code>Queue.offer(Object)</code>, and possibly schedules <a href="../../github/jcext/Enqueuer.html#pollAsync-java.util.Queue-"><code>pollAsync(Queue)</code></a> execution.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>what <code>Queue.offer(Object)</code> returns, <code>false</code> means queue overflow for bounded queues. <p></dd>
