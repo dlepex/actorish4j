@@ -1,5 +1,7 @@
 package github.jcext;
 
+import java.util.concurrent.Executor;
+
 abstract class EnqueuerBasedEntity {
 	/**
 	 * User associated id, can be anything having good toString() method.

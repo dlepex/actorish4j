@@ -31,12 +31,7 @@ import static github.jcext.JcExt.doneFuture;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
-	/**
-	 * Default bounded queue capacity.
-	 * Use system property {@code "jcext.enq.defaultCap"} to change it.
-	 * Default value is 8192
-	 */
-	public static final int defaultCapacity = Integer.getInteger("jcext.enq.defaultCap", 8192);
+
 	private static final int smallCapacity = Integer.getInteger("jcext.enq.smallCap", 65);
 
 
@@ -48,6 +43,7 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	private final Runnable queuePollRunnable;
 	private final Object id;
 	private final Executor maybeSameThread;
+	private final Executor threadPool;
 
 	protected Enqueuer(Conf config) {
 		this(config.chooseQueueImpl(), config.threadPool, config.id, config.sameThreadOpt);
@@ -58,6 +54,7 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		this.queue = q;
 		this.id = id;
 		this.maybeSameThread = sameThredOpt ? sameThreadExecutor : threadPool;
+		this.threadPool = threadPool;
 
 		BiConsumer pollNextIfExists = (ignored, ignored2) -> {
 			planned.set(false);
@@ -143,18 +140,23 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		return this;
 	}
 
+	public final Executor threadPool() {
+		return threadPool;
+	}
 
 	private static final Conf defaultConfig = new Conf();
 
 	/**
 	 * Configuration object.
+	 * Most users will use either {@link #setBoundedQueue(int)} or {@link #setUnboundedQueue()} method <p>
+	 * <b>By default the queue is unbounded</b><p>
+	 *
+	 * @see #setUnboundedQueue()
 	 */
 	public static class Conf {
 
 
 		/**
-		 * By default the queue is bounded and its max size equal to {@link #defaultCapacity}
-		 *
 		 * @param capacity max queue size.
 		 */
 		public void setBoundedQueue(int capacity) {
@@ -169,7 +171,9 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * This option is discouraged, most users should use bounded queues.
+		 * Be careful and <b>prefer bounded queues</b> for the cases where you deal with external untrusted user input (heap overflow exploit).<p>
+		 * Unbounded queues are the right choice when you can't afford item (or event) loss because it will lead to the state corruption
+		 * of your actor-like entity. However such entities should not be directly available to the untrusted party.
 		 */
 		public void setUnboundedQueue() {
 			this.capacity = 0;
@@ -252,14 +256,11 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 			if (smallCapacity < 16) {
 				throw new IllegalStateException("smallCapacity is too small, should be at least 16");
 			}
-			if (defaultCapacity < smallCapacity) {
-				throw new IllegalStateException("defaultCapacity is too small, should be > smallCapacity == " + smallCapacity);
-			}
 		}
 
 
 		private Executor threadPool = ForkJoinPool.commonPool();
-		private int capacity = defaultCapacity;
+		private int capacity;
 		private Object id;
 		private boolean useLockFreeQueue;
 		private boolean usePreallocatedQueue;

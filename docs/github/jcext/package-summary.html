@@ -101,10 +101,20 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;E&gt;</td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="../../github/jcext/TaskEnqueuer.RejectsListener.html" title="interface in github.jcext">TaskEnqueuer.RejectsListener</a></td>
 <td class="colLast">
 <div class="block">This hook may be helpful if you need to count how many times RejectedExecutionException was thrown
  in mustOffer-methods of <a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext"><code>TaskEnqueuer</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../github/jcext/Timer.html" title="interface in github.jcext">Timer</a></td>
+<td class="colLast">
+<div class="block">Experimental API, cancellation may be added in the future.</div>
 </td>
 </tr>
 </tbody>
@@ -146,16 +156,36 @@
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="../../github/jcext/StateMachine.html" title="class in github.jcext">StateMachine</a>&lt;E&gt;</td>
+<td class="colLast">
+<div class="block">Experimental implementation of Erlang gen_statem (gen_fsm) in a "state functions mode".</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../github/jcext/StateMachine.Conf.html" title="class in github.jcext">StateMachine.Conf</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a></td>
+<td class="colLast">
+<div class="block">This class exists to enforce the rule that the last statement in StateFunc must be goTo(...)</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="../../github/jcext/TaskEnqueuer.html" title="class in github.jcext">TaskEnqueuer</a></td>
 <td class="colLast">
 <div class="block">TaskEnqueuer is the <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext"><code>Enqueuer</code></a> that polls and executes async tasks <a href="../../github/jcext/AsyncRunnable.html" title="interface in github.jcext"><code>AsyncRunnable</code></a> one by one</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></td>
 <td class="colLast">
 <div class="block">Configuration object.</div>
 </td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../github/jcext/Timer.DefaultImpl.html" title="class in github.jcext">Timer.DefaultImpl</a></td>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>

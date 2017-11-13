@@ -3,6 +3,7 @@ package github.jcext.applications;
 import github.jcext.Enqueuer;
 import github.jcext.JcExt;
 import github.jcext.Poller;
+import github.jcext.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -196,7 +197,7 @@ public final class ExactDateScheduler {  //TODO proper reliable shutdown
 			LocalDateTime now = LocalDateTime.now();
 			pollTimeout = Duration.between(now, task.begin).toMillis();
 			if (pollTimeout > 0) {
-				timer.timeout(() -> enq.offer(timeoutSpecialValue), pollTimeout, TimeUnit.MILLISECONDS);
+				timer.delay(() -> enq.offer(timeoutSpecialValue), pollTimeout, TimeUnit.MILLISECONDS);
 				return null;
 			}
 

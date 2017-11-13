@@ -55,6 +55,16 @@ Agent is a very simple (thin) wrapper around the TaskEnqueuer class.
 Agent interface (method naming) is inspired by Elixir Agent module. 
 See https://hexdocs.pm/elixir/Agent.html
 
+#### github.jcext.StateMachine&lt;E&gt; 
+
+https://dlepex.github.io/jcext/github/jcext/StateMachine.html
+
+Experimental implementation of Erlang gen_statem (gen_fsm) behaviour in a "state functions mode". In this mode
+each state has a corresponding function (StateFunc) that handles events in that state.
+
+This test contains two example of state machines:
+https://github.com/dlepex/jcext/blob/master/src/main/java/github/jcext/StateMachineTest.java 
+
 
 #### Javadoc
 

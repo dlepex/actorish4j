@@ -107,7 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications">ExactDateScheduler.Conf</a>, <a href="../../github/jcext/applications/NettyChannelWritesEnqueuer.Conf.html" title="class in github.jcext.applications">NettyChannelWritesEnqueuer.Conf</a>, <a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></dd>
+<dd><a href="../../github/jcext/applications/ExactDateScheduler.Conf.html" title="class in github.jcext.applications">ExactDateScheduler.Conf</a>, <a href="../../github/jcext/applications/NettyChannelWritesEnqueuer.Conf.html" title="class in github.jcext.applications">NettyChannelWritesEnqueuer.Conf</a>, <a href="../../github/jcext/StateMachine.Conf.html" title="class in github.jcext">StateMachine.Conf</a>, <a href="../../github/jcext/TaskEnqueuer.Conf.html" title="class in github.jcext">TaskEnqueuer.Conf</a></dd>
 </dl>
 <dl>
 <dt>Enclosing class:</dt>
@@ -117,7 +117,13 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public static class <span class="typeNameLabel">Enqueuer.Conf</span>
 extends java.lang.Object</pre>
-<div class="block">Configuration object.</div>
+<div class="block">Configuration object.
+ Most users will use either <a href="../../github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-"><code>setBoundedQueue(int)</code></a> or <a href="../../github/jcext/Enqueuer.Conf.html#setUnboundedQueue--"><code>setUnboundedQueue()</code></a> method <p>
+ <b>By default the queue is unbounded</b><p></div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../github/jcext/Enqueuer.Conf.html#setUnboundedQueue--"><code>setUnboundedQueue()</code></a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -167,9 +173,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-">setBoundedQueue</a></span>(int&nbsp;capacity)</code>
-<div class="block">By default the queue is bounded and its max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-">setBoundedQueue</a></span>(int&nbsp;capacity)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
@@ -196,7 +200,7 @@ extends java.lang.Object</pre>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#setUnboundedQueue--">setUnboundedQueue</a></span>()</code>
-<div class="block">This option is discouraged, most users should use bounded queues.</div>
+<div class="block">Be careful and <b>prefer bounded queues</b> for the cases where you deal with external untrusted user input (heap overflow exploit).</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -257,7 +261,6 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>setBoundedQueue</h4>
 <pre>public&nbsp;void&nbsp;setBoundedQueue(int&nbsp;capacity)</pre>
-<div class="block">By default the queue is bounded and its max size equal to <a href="../../github/jcext/Enqueuer.html#defaultCapacity"><code>Enqueuer.defaultCapacity</code></a></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>capacity</code> - max queue size.</dd>
@@ -271,7 +274,9 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>setUnboundedQueue</h4>
 <pre>public&nbsp;void&nbsp;setUnboundedQueue()</pre>
-<div class="block">This option is discouraged, most users should use bounded queues.</div>
+<div class="block">Be careful and <b>prefer bounded queues</b> for the cases where you deal with external untrusted user input (heap overflow exploit).<p>
+ Unbounded queues are the right choice when you can't afford item (or event) loss because it will lead to the state corruption
+ of your actor-like entity. However such entities should not be directly available to the untrusted party.</div>
 </li>
 </ul>
 <a name="setAssociatedId-java.lang.Object-">
