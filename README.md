@@ -63,7 +63,7 @@ Experimental implementation of Erlang gen_statem (gen_fsm) behaviour in a "state
 each state has a corresponding function (StateFunc) that handles events in that state.
 
 This test contains two example of state machines:
-https://github.com/dlepex/jcext/blob/master/src/main/java/github/jcext/StateMachineTest.java 
+https://github.com/dlepex/jcext/blob/master/src/test/java/github/jcext/StateMachineTest.java 
 
 
 #### Javadoc
