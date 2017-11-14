@@ -164,6 +164,11 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 		return goTo(nextAsync.thenCompose(val -> timer.delayValue(val, delay, unit)));
 	}
 
+	protected final NextState goTo(CompletionStage<StateFunc<E>> nextAsync, int delayMillis) {
+		requireNonNull(nextAsync);
+		return goTo(nextAsync, delayMillis, TimeUnit.MILLISECONDS);
+	}
+
 	protected final NextState goTo(StateFunc<E> next, long delay, TimeUnit unit) {
 		requireNonNull(next);
 		return goTo(completedFuture(next), delay, unit);
