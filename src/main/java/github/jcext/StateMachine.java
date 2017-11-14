@@ -15,10 +15,10 @@ import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
- * Experimental implementation of Erlang gen_statem (gen_fsm) in a "state functions mode".<p>
+ * Event-Driven State Machine implementation inspired by Erlang gen_statem (gen_fsm) behaviour in a "state functions mode".<p>
  * <a href="http://erlang.org/doc/design_principles/statem.html">gen_statem Behavior</a> <p>
  * <p>
- * "State functions mode" means that the state is identified by {@link StateFunc}, which handles events in that state.
+ * "State functions mode" means that each state has  {@link StateFunc}, which handles events.
  * <p>
  * This class contains lots of transition method forms: goTo(...) including forms with timeouts and async transitions. <p>
  * <p>
@@ -27,7 +27,8 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * In its final state StateMachine will just keep logging (debug level) events forever,
  * this can be customized {@link Conf#setFinalStateEventHandler(Consumer)} <p>
  * <p>
- * Be careful, if StateFunc throws uncaught exception then StateMachine will go to {@link #finalState()} automatically. <p>
+ * Be careful, if StateFunc throws an uncaught exception then StateMachine will go to {@link #finalState()} automatically,
+ * this is also customizable, see: {@link #recover(Throwable)} <p>
  * Clients can be notified when the final state was reached {@link #finalStateReached()} and determine the cause of it <p>
  *
  * @param <E> event type
@@ -36,6 +37,9 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 
 	private static final Logger log = LoggerFactory.getLogger(StateMachine.class);
 
+	/**
+	 * Configuration object
+	 */
 	public static class Conf extends Enqueuer.Conf {
 		private Timer timer = Timer.defaultInstance();
 		private Consumer<Object> eventConsumer;
@@ -91,6 +95,13 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	protected abstract StateFunc<E> initialState();
 
 	/**
+	 * Descendants may override this behaviour, by default StateMachine can't recover and so it goes to finalState()
+	 * @param ex exception which was thrown in StateFunc directly or indirectly, that is in async state transitions (nextAsync parameters of goTo)
+	 */
+	protected StateFunc<E> recover(Throwable ex) {
+		return finalState();
+	}
+	/**
 	 * Descendant classes may override this method to be public, or define their own business specific methods which call send().
 	 */
 	protected void send(E event) throws RejectedExecutionException {
@@ -115,9 +126,10 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 		try {
 			NextState dummy = state.apply(queue.poll());
 			requireNonNull(dummy, "StateFunc must end with \"return goTo(...) statement\"");
-		} catch (Exception ex) {
-			this.state = FinalState;
-			this.finalStateReached.completeExceptionally(ex);
+		} catch (Throwable ex) {
+			if (tryRecover(ex) == FinalState) {
+				this.finalStateReached.completeExceptionally(ex);
+			}
 			return null;
 		}
 
@@ -134,8 +146,10 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 				this.finalStateReached.complete(null);
 			}
 		} else {
-			this.state = FinalState;
-			this.finalStateReached.completeExceptionally(ex != null ? ex : new NullPointerException("nextState can't be null"));
+			Throwable ex1 = ex != null ? ex : new NullPointerException("BUG: nextState can't be null");
+			if (tryRecover(ex1) == FinalState) {
+				this.finalStateReached.completeExceptionally(ex1);
+			}
 		}
 	};
 
@@ -186,6 +200,18 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 		} else {
 			endStateEventConsumer.accept(event);
 		}
+	}
+
+	private StateFunc<E> tryRecover(Throwable ex) {
+		StateFunc<E> recState;
+		try {
+			recState = recover(ex);
+		} catch (Throwable e) {
+			log.error(toString() + ": BUG: recover() must never throw.", e);
+			recState = finalState();
+		}
+		this.state = recState;
+		return recState;
 	}
 
 }

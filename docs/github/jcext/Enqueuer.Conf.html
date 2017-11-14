@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -120,10 +120,6 @@ extends java.lang.Object</pre>
 <div class="block">Configuration object.
  Most users will use either <a href="../../github/jcext/Enqueuer.Conf.html#setBoundedQueue-int-"><code>setBoundedQueue(int)</code></a> or <a href="../../github/jcext/Enqueuer.Conf.html#setUnboundedQueue--"><code>setUnboundedQueue()</code></a> method <p>
  <b>By default the queue is unbounded</b><p></div>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../github/jcext/Enqueuer.Conf.html#setUnboundedQueue--"><code>setUnboundedQueue()</code></a></dd>
-</dl>
 </li>
 </ul>
 </div>
@@ -205,14 +201,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#useLockFreeQueue--">useLockFreeQueue</a></span>()</code>
-<div class="block">Queue choice tweak</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/Enqueuer.Conf.html#usePreallocatedQueue--">usePreallocatedQueue</a></span>()</code>
-<div class="block">Queue choice tweak</div>
+<div class="block">Queue choice tweak for bounded queues</div>
 </td>
 </tr>
 </table>
@@ -310,25 +300,11 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>usePreallocatedQueue</h4>
 <pre>public&nbsp;void&nbsp;usePreallocatedQueue()</pre>
-<div class="block">Queue choice tweak <p>
- This option is auto-enabled if the setBoundedQueue capacity is less than <a href="../../github/jcext/Enqueuer.html#smallCapacity"><code>Enqueuer.smallCapacity</code></a>;
- It makes no sense for unbounded queue case.</div>
-</li>
-</ul>
-<a name="useLockFreeQueue--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>useLockFreeQueue</h4>
-<pre>public&nbsp;void&nbsp;useLockFreeQueue()</pre>
-<div class="block">Queue choice tweak <p>
- Unbounded queue case is always lock-free, it is based on CLQ.
- Bounded queue case is based on LBQ or ABQ (ABQ if usePreallocatedQueue).
- <p>
- If you want bounded queue to be lock-free you must
- <ul><li> enable options: usePreallocatedQueue() and useLockFreeQueue()
- <li> include dependency: org.jctools:jctools-core:2.1.1+ dependency</ul></div>
+<div class="block">Queue choice tweak for bounded queues <p>
+
+ Use this tweak if you really need array-based (non-shrinkable!) queue. By default, bounded queue is <code>LinkedBlockingQueue</code>,
+ with this option on it will be <code>ArrayBlockingQueue</code>. If JCTools found on classpath then MpmcAQ will be used  instead of JDK ABQ. <p>
+ This tweak is auto-enabled if the setBoundedQueue capacity is less than <a href="../../github/jcext/Enqueuer.html#smallCapacity"><code>Enqueuer.smallCapacity</code></a> <p></div>
 </li>
 </ul>
 <a name="setCustomQueue-github.jcext.Enqueuer.QueueFactory-">

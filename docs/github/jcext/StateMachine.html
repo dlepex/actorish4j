@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":6,"i9":10,"i10":10,"i11":10,"i12":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":6,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -113,10 +113,10 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public abstract class <span class="typeNameLabel">StateMachine&lt;E&gt;</span>
 extends java.lang.Object</pre>
-<div class="block">Experimental implementation of Erlang gen_statem (gen_fsm) in a "state functions mode".<p>
+<div class="block">Event-Driven State Machine implementation inspired by Erlang gen_statem (gen_fsm) behaviour in a "state functions mode".<p>
  <a href="http://erlang.org/doc/design_principles/statem.html">gen_statem Behavior</a> <p>
  <p>
- "State functions mode" means that the state is identified by <a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext"><code>StateMachine.StateFunc</code></a>, which handles events in that state.
+ "State functions mode" means that each state has  <a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext"><code>StateMachine.StateFunc</code></a>, which handles events.
  <p>
  This class contains lots of transition method forms: goTo(...) including forms with timeouts and async transitions. <p>
  <p>
@@ -125,7 +125,8 @@ extends java.lang.Object</pre>
  In its final state StateMachine will just keep logging (debug level) events forever,
  this can be customized <a href="../../github/jcext/StateMachine.Conf.html#setFinalStateEventHandler-java.util.function.Consumer-"><code>StateMachine.Conf.setFinalStateEventHandler(Consumer)</code></a> <p>
  <p>
- Be careful, if StateFunc throws uncaught exception then StateMachine will go to <a href="../../github/jcext/StateMachine.html#finalState--"><code>finalState()</code></a> automatically. <p>
+ Be careful, if StateFunc throws an uncaught exception then StateMachine will go to <a href="../../github/jcext/StateMachine.html#finalState--"><code>finalState()</code></a> automatically,
+ this is also customizable, see: <a href="../../github/jcext/StateMachine.html#recover-java.lang.Throwable-"><code>recover(Throwable)</code></a> <p>
  Clients can be notified when the final state was reached <a href="../../github/jcext/StateMachine.html#finalStateReached--"><code>finalStateReached()</code></a> and determine the cause of it <p></div>
 </li>
 </ul>
@@ -147,7 +148,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.Conf.html" title="class in github.jcext">StateMachine.Conf</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.Conf.html" title="class in github.jcext">StateMachine.Conf</a></span></code>
+<div class="block">Configuration object</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected static class&nbsp;</code></td>
@@ -257,19 +260,25 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#sameState--">sameState</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#recover-java.lang.Throwable-">recover</a></span>(java.lang.Throwable&nbsp;ex)</code>
+<div class="block">Descendants may override this behaviour, by default StateMachine can't recover and so it goes to finalState()</div>
+</td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#sameState--">sameState</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#send-E-">send</a></span>(<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&nbsp;event)</code>
 <div class="block">Descendant classes may override this method to be public, or define their own business specific methods which call send().</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#underlyingEnq--">underlyingEnq</a></span>()</code>&nbsp;</td>
 </tr>
@@ -336,6 +345,20 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>initialState</h4>
 <pre>protected abstract&nbsp;<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&nbsp;initialState()</pre>
+</li>
+</ul>
+<a name="recover-java.lang.Throwable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>recover</h4>
+<pre>protected&nbsp;<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&nbsp;recover(java.lang.Throwable&nbsp;ex)</pre>
+<div class="block">Descendants may override this behaviour, by default StateMachine can't recover and so it goes to finalState()</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ex</code> - exception which was thrown in StateFunc directly or indirectly, that is in async state transitions (nextAsync parameters of goTo)</dd>
+</dl>
 </li>
 </ul>
 <a name="send-java.lang.Object-">

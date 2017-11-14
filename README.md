@@ -11,7 +11,7 @@ The simplest way to use JCExt in your project is through https://jitpack.io
 Gradle build sample: 
 ```groovy
 	dependencies {
-		compile 'com.github.dlepex:jcext:v0.7.1'
+		compile 'com.github.dlepex:jcext:v0.7.2'
 
 		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
 		// JCExt may use JCTools MpmcArrayQueue, if it detects its presence
@@ -59,7 +59,7 @@ See https://hexdocs.pm/elixir/Agent.html
 
 https://dlepex.github.io/jcext/github/jcext/StateMachine.html
 
-Experimental implementation of Erlang gen_statem (gen_fsm) behaviour in a "state functions mode". In this mode
+Event-Driven State Machine implementation inspired by Erlang gen_statem (gen_fsm) behaviour in a "state functions mode". In this mode
 each state has a corresponding function (StateFunc) that handles events in that state.
 
 This test contains two example of state machines:

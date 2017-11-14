@@ -297,7 +297,7 @@ extends java.lang.Object</pre>
  This method must be non-blocking. <p>
  It may return null, which is interpreted the same as <code>CompletableFuture.completedFuture(Object)</code> (immediate completion)
  <p>
- Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
+ Never save the reference to the queue parameter anywhere, use it only inside the async computation of this method.
  i.e. you should not keep/use the queue after the resultant CompletionStage is completed
  <p>
  You are free to call other methods of the queue in addition to poll().

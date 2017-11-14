@@ -114,7 +114,7 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * This method must be non-blocking. <p>
 	 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
 	 * <p>
-	 * Never save the reference to the queue parameter anywhere, use it only inside async computation of this method.
+	 * Never save the reference to the queue parameter anywhere, use it only inside the async computation of this method.
 	 * i.e. you should not keep/use the queue after the resultant CompletionStage is completed
 	 * <p>
 	 * You are free to call other methods of the queue in addition to poll().
@@ -150,8 +150,6 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * Configuration object.
 	 * Most users will use either {@link #setBoundedQueue(int)} or {@link #setUnboundedQueue()} method <p>
 	 * <b>By default the queue is unbounded</b><p>
-	 *
-	 * @see #setUnboundedQueue()
 	 */
 	public static class Conf {
 
@@ -196,25 +194,14 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * Queue choice tweak <p>
-		 * This option is auto-enabled if the setBoundedQueue capacity is less than {@link #smallCapacity};
-		 * It makes no sense for unbounded queue case.
+		 * Queue choice tweak for bounded queues <p>
+		 *
+		 * Use this tweak if you really need array-based (non-shrinkable!) queue. By default, bounded queue is {@link LinkedBlockingQueue},
+		 * with this option on it will be {@link ArrayBlockingQueue}. If JCTools found on classpath then MpmcAQ will be used  instead of JDK ABQ. <p>
+		 * This tweak is auto-enabled if the setBoundedQueue capacity is less than {@link #smallCapacity} <p>
 		 */
 		public void usePreallocatedQueue() {
 			this.usePreallocatedQueue = true;
-		}
-
-		/**
-		 * Queue choice tweak <p>
-		 * Unbounded queue case is always lock-free, it is based on CLQ.
-		 * Bounded queue case is based on LBQ or ABQ (ABQ if usePreallocatedQueue).
-		 * <p>
-		 * If you want bounded queue to be lock-free you must
-		 * <ul><li> enable options: usePreallocatedQueue() and useLockFreeQueue()
-		 * <li> include dependency: org.jctools:jctools-core:2.1.1+ dependency</ul>
-		 */
-		public void useLockFreeQueue() {
-			this.useLockFreeQueue = true;
 		}
 
 		/**
@@ -262,7 +249,6 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		private Executor threadPool = ForkJoinPool.commonPool();
 		private int capacity;
 		private Object id;
-		private boolean useLockFreeQueue;
 		private boolean usePreallocatedQueue;
 		private boolean sameThreadOpt = true;
 		private QueueFactory custom;
@@ -278,14 +264,6 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 				throw new IllegalArgumentException("Preallocated unbounded queue is impossible.");
 			}
 			if (cap > 0) { // bounded case
-				if (useLockFreeQueue) {
-					if (!JcExt.jcToolsFound) {
-						throw new IllegalStateException("To use lock free bounded queue you must include dependency: org.jctools:jctools-core:2.1.1+");
-					}
-					if (!usePreallocatedQueue) {
-						throw new IllegalStateException("Enable usePreallocatedQueue() option as well if you want lock-free bounded queue.");
-					}
-				}
 				return wrap(usePreallocatedQueue ? JcExt.newPreallocatedQueue(cap) : new LinkedBlockingQueue<>(cap));
 			} else { // unbounded case:
 				return wrap(new ConcurrentLinkedQueue<>());

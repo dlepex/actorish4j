@@ -349,6 +349,10 @@
 <dl>
 <dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.Task.Info.html#realBegin--">realBegin()</a></span> - Method in interface github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.Task.Info.html" title="interface in github.jcext.applications">ExactDateScheduler.Task.Info</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="github/jcext/StateMachine.html#recover-java.lang.Throwable-">recover(Throwable)</a></span> - Method in class github.jcext.<a href="github/jcext/StateMachine.html" title="class in github.jcext">StateMachine</a></dt>
+<dd>
+<div class="block">Descendants may override this behaviour, by default StateMachine can't recover and so it goes to finalState()</div>
+</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/applications/ExactDateScheduler.Task.html#run-github.jcext.applications.ExactDateScheduler.Task.Info-">run(ExactDateScheduler.Task.Info)</a></span> - Method in interface github.jcext.applications.<a href="github/jcext/applications/ExactDateScheduler.Task.html" title="interface in github.jcext.applications">ExactDateScheduler.Task</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/AsyncRunnable.html#runAsync--">runAsync()</a></span> - Method in interface github.jcext.<a href="github/jcext/AsyncRunnable.html" title="interface in github.jcext">AsyncRunnable</a></dt>
@@ -415,12 +419,14 @@
 <dd>&nbsp;</dd>
 <dt><a href="github/jcext/StateMachine.html" title="class in github.jcext"><span class="typeNameLink">StateMachine</span></a>&lt;<a href="github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt; - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
-<div class="block">Experimental implementation of Erlang gen_statem (gen_fsm) in a "state functions mode".</div>
+<div class="block">Event-Driven State Machine implementation inspired by Erlang gen_statem (gen_fsm) behaviour in a "state functions mode".</div>
 </dd>
 <dt><span class="memberNameLink"><a href="github/jcext/StateMachine.html#StateMachine-github.jcext.StateMachine.Conf-">StateMachine(StateMachine.Conf)</a></span> - Constructor for class github.jcext.<a href="github/jcext/StateMachine.html" title="class in github.jcext">StateMachine</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="github/jcext/StateMachine.Conf.html" title="class in github.jcext"><span class="typeNameLink">StateMachine.Conf</span></a> - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Configuration object</div>
+</dd>
 <dt><a href="github/jcext/StateMachine.NextState.html" title="class in github.jcext"><span class="typeNameLink">StateMachine.NextState</span></a> - Class in <a href="github/jcext/package-summary.html">github.jcext</a></dt>
 <dd>
 <div class="block">This class exists to enforce the rule that the last statement in StateFunc must be goTo(...)</div>
@@ -482,13 +488,9 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Agent.html#updateAsync-java.util.function.Function-">updateAsync(Function&lt;? super S, ? extends CompletionStage&lt;? extends S&gt;&gt;)</a></span> - Method in class github.jcext.<a href="github/jcext/Agent.html" title="class in github.jcext">Agent</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#useLockFreeQueue--">useLockFreeQueue()</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
-<dd>
-<div class="block">Queue choice tweak</div>
-</dd>
 <dt><span class="memberNameLink"><a href="github/jcext/Enqueuer.Conf.html#usePreallocatedQueue--">usePreallocatedQueue()</a></span> - Method in class github.jcext.<a href="github/jcext/Enqueuer.Conf.html" title="class in github.jcext">Enqueuer.Conf</a></dt>
 <dd>
-<div class="block">Queue choice tweak</div>
+<div class="block">Queue choice tweak for bounded queues</div>
 </dd>
 </dl>
 <a name="I:V">
