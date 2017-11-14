@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":6,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":6,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -235,50 +235,55 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#goTo-java.util.concurrent.CompletionStage-int-">goTo</a></span>(java.util.concurrent.CompletionStage&lt;<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&gt;&nbsp;nextAsync,
+    int&nbsp;delayMillis)</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#goTo-java.util.concurrent.CompletionStage-long-java.util.concurrent.TimeUnit-">goTo</a></span>(java.util.concurrent.CompletionStage&lt;<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&gt;&nbsp;nextAsync,
     long&nbsp;delay,
     java.util.concurrent.TimeUnit&nbsp;unit)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#goTo-github.jcext.StateMachine.StateFunc-">goTo</a></span>(<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&nbsp;next)</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#goTo-github.jcext.StateMachine.StateFunc-int-">goTo</a></span>(<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&nbsp;next,
     int&nbsp;delayMillis)</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#goTo-github.jcext.StateMachine.StateFunc-long-java.util.concurrent.TimeUnit-">goTo</a></span>(<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&nbsp;next,
     long&nbsp;delay,
     java.util.concurrent.TimeUnit&nbsp;unit)</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected abstract <a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#initialState--">initialState</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#recover-java.lang.Throwable-">recover</a></span>(java.lang.Throwable&nbsp;ex)</code>
 <div class="block">Descendants may override this behaviour, by default StateMachine can't recover and so it goes to finalState()</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#sameState--">sameState</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#send-E-">send</a></span>(<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&nbsp;event)</code>
 <div class="block">Descendant classes may override this method to be public, or define their own business specific methods which call send().</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>protected <a href="../../github/jcext/Enqueuer.html" title="class in github.jcext">Enqueuer</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../github/jcext/StateMachine.html#underlyingEnq--">underlyingEnq</a></span>()</code>&nbsp;</td>
 </tr>
@@ -405,6 +410,16 @@ extends java.lang.Object</pre>
 <pre>protected final&nbsp;<a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a>&nbsp;goTo(java.util.concurrent.CompletionStage&lt;<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&gt;&nbsp;nextAsync,
                                             long&nbsp;delay,
                                             java.util.concurrent.TimeUnit&nbsp;unit)</pre>
+</li>
+</ul>
+<a name="goTo-java.util.concurrent.CompletionStage-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>goTo</h4>
+<pre>protected final&nbsp;<a href="../../github/jcext/StateMachine.NextState.html" title="class in github.jcext">StateMachine.NextState</a>&nbsp;goTo(java.util.concurrent.CompletionStage&lt;<a href="../../github/jcext/StateMachine.StateFunc.html" title="interface in github.jcext">StateMachine.StateFunc</a>&lt;<a href="../../github/jcext/StateMachine.html" title="type parameter in StateMachine">E</a>&gt;&gt;&nbsp;nextAsync,
+                                            int&nbsp;delayMillis)</pre>
 </li>
 </ul>
 <a name="goTo-github.jcext.StateMachine.StateFunc-long-java.util.concurrent.TimeUnit-">
