@@ -22,7 +22,7 @@ Gradle build sample:
 
 
 #### Enqueuer&lt;T&gt; 
-https://dlepex.github.io/actorish4j/Enqueuer.html
+https://dlepex.github.io/actorish4j/io/github/actorish4j/Enqueuer.html
 
 Enqueuer is the most basic and the most useful form of actor-like entity. 
 
@@ -32,7 +32,7 @@ the single consumer can read (poll) the queue.
 All other actor-like entities in this lib are implemented on top of the Enqueuer. 
 
 #### TaskEnqueuer 
-https://dlepex.github.io/actorish4j/TaskEnqueuer.html
+https://dlepex.github.io/actorish4j/io/github/actorish4j/TaskEnqueuer.html
 
 TaskEnqueuer is the Enqueuer which polls and executes async tasks one by one.
 
@@ -47,7 +47,7 @@ TaskEnqueuer guarantees that:
 
 
 #### Agent&lt;S&gt; 
-https://dlepex.github.io/actorish4j/Agent.html
+https://dlepex.github.io/actorish4j/io/github/actorish4j/Agent.html
 
 Agent implements the specific form of "state sharing pattern" tailored to asynchronous computations 
 (Basically this library itself only useful for non-blocking code)
@@ -59,18 +59,18 @@ See https://hexdocs.pm/elixir/Agent.html
 
 #### StateMachine&lt;E&gt; 
 
-https://dlepex.github.io/actorish4j/StateMachine.html
+https://dlepex.github.io/actorish4j/io/github/actorish4j/StateMachine.html
 
 Event-Driven State Machine implementation inspired by Erlang gen_statem (gen_fsm) behaviour in a "state functions mode". 
 In this mode each state has (or better say "is") a corresponding function (StateFunc) that handles events in that state.
 
 This test contains two example of state machines:
-https://github.com/dlepex/actorish4j/blob/master/src/test/java/StateMachineTest.java 
+https://github.com/dlepex/actorish4j/io/github/actorish4j/blob/master/src/test/java/StateMachineTest.java 
 
 
 #### Javadoc
 
-https://dlepex.github.io/actorish4j/
+https://dlepex.github.io/actorish4j/io/github/actorish4j/
 
 #### Showcases
 
@@ -78,13 +78,13 @@ The classes below are the examples of applying Acrtorish4j to the "real world pr
 
 ###### NettyChannelWritesEnqueuer
 
-https://github.com/dlepex/actorish4j/blob/master/src/main/java/applications/NettyChannelWritesEnqueuer.java
+https://github.com/dlepex/actorish4j/io/github/actorish4j/blob/master/src/main/java/applications/NettyChannelWritesEnqueuer.java
 
 NettyChannelWritesEnqueuer orders writes to Netty channel and flushes them when it's appropriate to do so.
 
 ###### ExactDateScheduler
 
-https://github.com/dlepex/actorish4j/blob/master/src/main/java/applications/ExactDateScheduler.java
+https://github.com/dlepex/actorish4j/io/github/actorish4j/blob/master/src/main/java/applications/ExactDateScheduler.java
 
 ExactDateScheduler schedules task execution at specified LocalDateTime.
 Tasks are executed sequentially one after another, their order is preserved in case of equal begin dates
