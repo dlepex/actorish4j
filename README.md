@@ -1,13 +1,13 @@
 ### Purpose
 
-Acrtorish4j is a minimalistic library that provides asynchronous (non-blocking), actor-like entities and 
+Actorish4j is a minimalistic library that provides asynchronous (non-blocking), actor-like entities and 
 tries to implement these entities in the most Java-friendly way.
  
 Due to its simplicity and **tight integration with Java 8 CompletableFuture/CompletionStage and Queue API**, 
-Acrtorish4j may be the better choice than some bloated Actor frameworks. If you are not interested in supervision hierarchies, 
-actor-based network communication and only need the concurrency part then Acrtorish4j may be the tool for you.
+Actorish4j may be the better choice than some bloated Actor frameworks. If you are not interested in supervision hierarchies, 
+actor-based network communication and only need the concurrency part then Actorish4j may be the tool for you.
 
-The simplest way to use Acrtorish4j in your project is through https://jitpack.io
+The simplest way to use Actorish4j in your project is through https://jitpack.io
 
 Gradle build sample: 
 ```groovy
@@ -15,7 +15,7 @@ Gradle build sample:
 		compile 'com.github.dlepex:actorish4j:v0.7.3'
 
 		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
-		// Acrtorish4j may use JCTools MpmcArrayQueue, if it detects its presence
+		// Actorish4j may use JCTools MpmcArrayQueue, if it detects its presence
 	}
 ```
 ### Overview
@@ -74,7 +74,7 @@ https://dlepex.github.io/actorish4j/io/github/actorish4j/
 
 #### Showcases
 
-The classes below are the examples of applying Acrtorish4j to the "real world problems". 
+The classes below are the examples of applying Actorish4j to the "real world problems". 
 
 ###### NettyChannelWritesEnqueuer
 
