@@ -78,13 +78,13 @@ The classes below are the examples of applying Acrtorish4j to the "real world pr
 
 ###### NettyChannelWritesEnqueuer
 
-https://github.com/dlepex/actorish4j/io/github/actorish4j/blob/master/src/main/java/applications/NettyChannelWritesEnqueuer.java
+https://github.com/dlepex/actorish4j/blob/master/src/main/java/io/github/actorish4j/applications/NettyChannelWritesEnqueuer.java
 
 NettyChannelWritesEnqueuer orders writes to Netty channel and flushes them when it's appropriate to do so.
 
 ###### ExactDateScheduler
 
-https://github.com/dlepex/actorish4j/io/github/actorish4j/blob/master/src/main/java/applications/ExactDateScheduler.java
+https://github.com/dlepex/actorish4j/blob/master/src/main/java/io/github/actorish4j/applications/ExactDateScheduler.java
 
 ExactDateScheduler schedules task execution at specified LocalDateTime.
 Tasks are executed sequentially one after another, their order is preserved in case of equal begin dates
