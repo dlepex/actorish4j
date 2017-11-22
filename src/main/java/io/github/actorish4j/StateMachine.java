@@ -60,7 +60,7 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	}
 
 	/**
-	 * This class exists to enforce the rule that the last statement in StateFunc must be goTo(...)
+	 * This class exists to enforce the rule that the last statement in StateFunc must be {@code return goTo(...)}
 	 */
 	@SuppressWarnings("all")
 	protected static final class NextState {
