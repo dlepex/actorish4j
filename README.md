@@ -1,22 +1,25 @@
 ### Purpose
 
-Actorish4j is a minimalistic library that provides asynchronous (non-blocking), actor-like entities and 
+Actorish4j is a minimalistic library that provides asynchronous (non-blocking), actorlike entities and 
 tries to implement these entities in the most Java-friendly way.
  
 Due to its simplicity and **tight integration with Java 8 CompletableFuture/CompletionStage and Queue API**, 
 Actorish4j may be the better choice than some bloated Actor frameworks. If you are not interested in supervision hierarchies, 
-actor-based network communication and only need the concurrency part then Actorish4j may be the tool for you.
+actor-based network communication and only need the concurrency part then this library may be the tool for you.
 
-The simplest way to use Actorish4j in your project is through https://jitpack.io
-
-Gradle build sample: 
-```groovy
-	dependencies {
-		compile 'com.github.dlepex:actorish4j:v0.7.3'
-
-		// compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
-		// Actorish4j may use JCTools MpmcArrayQueue, if it detects its presence
-	}
+Use JitPack to add dependency in your project:
+```
+    // gradle build sample
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        compile 'com.github.dlepex:actorish4j:v0.7.3'
+    
+        // compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
+        // Actorish4j may use JCTools MpmcArrayQueue, if it detects its presence
+    }
 ```
 ### Overview
 
