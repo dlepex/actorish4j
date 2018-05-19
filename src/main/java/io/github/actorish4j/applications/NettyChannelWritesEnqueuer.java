@@ -56,7 +56,7 @@ public final class NettyChannelWritesEnqueuer extends Enqueuer<ByteBuf> {
 			if (bytesToFlush <= flushLimit) {
 				stage = doWrite(stage, buf);
 			} else {
-				bytesToFlush = 0;
+				bytesToFlush = bufSize;
 				stage = doFlush(stage);
 				stage = doWrite(stage, buf);
 			}
