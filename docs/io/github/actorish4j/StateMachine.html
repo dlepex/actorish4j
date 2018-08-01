@@ -118,9 +118,12 @@ extends java.lang.Object</pre>
  <p>
  "State functions mode" means that each state has  <a href="../../../io/github/actorish4j/StateMachine.StateFunc.html" title="interface in io.github.actorish4j"><code>StateMachine.StateFunc</code></a>, which handles events.
  <p>
- This class contains lots of transition method forms: goTo(...) including forms with timeouts and async transitions. <p>
+ This class provides various transition methods forms : goTo(...) including forms with timeouts and async transitions. <p>
  <p>
  There're two predefined states that can be used with goTo: <a href="../../../io/github/actorish4j/StateMachine.html#sameState--"><code>sameState()</code></a> and <a href="../../../io/github/actorish4j/StateMachine.html#finalState--"><code>finalState()</code></a>
+ <p>
+   To create a state machine, the user must inherit from this class, implement <a href="../../../io/github/actorish4j/StateMachine.html#initialState--"><code>initialState()</code></a> method
+   and override <a href="../../../io/github/actorish4j/StateMachine.html#send-E-"><code>send(Object)</code></a> to be public or better provide your own specific sending methods which call send() internally.
  <p>
  In its final state StateMachine will just keep logging (debug level) events forever,
  this can be customized <a href="../../../io/github/actorish4j/StateMachine.Conf.html#setFinalStateEventHandler-java.util.function.Consumer-"><code>StateMachine.Conf.setFinalStateEventHandler(Consumer)</code></a> <p>

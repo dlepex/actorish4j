@@ -20,9 +20,12 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  * <p>
  * "State functions mode" means that each state has  {@link StateFunc}, which handles events.
  * <p>
- * This class contains lots of transition method forms: goTo(...) including forms with timeouts and async transitions. <p>
+ * This class provides various transition methods forms : goTo(...) including forms with timeouts and async transitions. <p>
  * <p>
  * There're two predefined states that can be used with goTo: {@link #sameState()} and {@link #finalState()}
+ * <p>
+ *   To create a state machine, the user must inherit from this class, implement {@link #initialState()} method
+ *   and override {@link #send(Object)} to be public or better provide your own specific sending methods which call send() internally.
  * <p>
  * In its final state StateMachine will just keep logging (debug level) events forever,
  * this can be customized {@link Conf#setFinalStateEventHandler(Consumer)} <p>
