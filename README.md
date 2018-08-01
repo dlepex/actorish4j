@@ -15,7 +15,7 @@ Use JitPack to add dependency in your project:
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        compile 'com.github.dlepex:actorish4j:v0.7.3'
+        compile 'com.github.dlepex:actorish4j:v0.7.4'
     
         // compile 'org.jctools:jctools-core:2.1.1' // optional dependency, 
         // Actorish4j may use JCTools MpmcArrayQueue, if it detects its presence
