@@ -70,11 +70,11 @@ In this mode each state has (or better say "is") a corresponding function (State
 This test contains two example of state machines:
 https://github.com/dlepex/actorish4j/blob/master/src/test/java/io/github/actorish4j/StateMachineTest.java
 
-#### Javadoc
+### Javadoc
 
-https://dlepex.github.io/actorish4j/io/github/actorish4j/
+https://dlepex.github.io/actorish4j/overview-summary.html
 
-#### Showcases
+### Showcases
 
 The classes below are the examples of applying Actorish4j to the "real world problems". 
 

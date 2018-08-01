@@ -31,7 +31,7 @@ import java.util.function.UnaryOperator;
 @SuppressWarnings("WeakerAccess")
 public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 
-	private static final int smallCapacity = Integer.getInteger("jcext.enq.smallCap", 65);
+	private static final int smallCapacity = Integer.getInteger("actorish4j.enq.smallCap", 65);
 
 
 	private static final Logger log = LoggerFactory.getLogger(Enqueuer.class);
