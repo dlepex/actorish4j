@@ -27,12 +27,12 @@ Use JitPack to add dependency in your project:
 #### Enqueuer&lt;T&gt; 
 https://dlepex.github.io/actorish4j/io/github/actorish4j/Enqueuer.html
 
-Enqueuer is the most basic and the most useful form of actor-like entity. 
+Enqueuer is the most basic and the most useful "actor-like" entity.
 
-Enqueuer implements the multiple-producer single-consumer pattern: anyone can send (offer) a message to the Enqueuer, but only
-the single consumer can read (poll) the queue.
+Enqueuer implements **the multiple-producer single-consumer idiom**: anyone can send (offer) a message to the Enqueuer, but only
+the single consumer can read (poll) the queue. **The polling is done asynchronously.**
 
-All other actor-like entities in this lib are implemented on top of the Enqueuer. 
+All other actor-like entities in this library are implemented on top of the Enqueuer.
 
 #### TaskEnqueuer 
 https://dlepex.github.io/actorish4j/io/github/actorish4j/TaskEnqueuer.html
@@ -68,8 +68,7 @@ Event-Driven State Machine implementation inspired by Erlang gen_statem (gen_fsm
 In this mode each state has (or better say "is") a corresponding function (StateFunc) that handles events in that state.
 
 This test contains two example of state machines:
-https://github.com/dlepex/actorish4j/io/github/actorish4j/blob/master/src/test/java/StateMachineTest.java 
-
+https://github.com/dlepex/actorish4j/blob/master/src/test/java/io/github/actorish4j/StateMachineTest.java
 
 #### Javadoc
 
