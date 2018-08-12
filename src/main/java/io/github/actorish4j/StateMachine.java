@@ -9,7 +9,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
@@ -28,7 +27,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  *   and override {@link #send(Object)} to be public or better provide your own specific sending methods which call send() internally.
  * <p>
  * In its final state StateMachine will just keep logging (debug level) events forever,
- * this can be customized {@link Conf#setFinalStateEventHandler(Consumer)} <p>
+ * this can be customized {@link Conf#setFinalStateHandler(EventConsumer)} <p>
  * <p>
  * Be careful, if StateFunc throws an uncaught exception then StateMachine will go to {@link #finalState()} automatically,
  * this is also customizable, see: {@link #recover(Throwable)} <p>
@@ -45,7 +44,7 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	 */
 	public static class Conf extends Enqueuer.Conf {
 		private Timer timer = Timer.defaultInstance();
-		private Consumer<Object> eventConsumer;
+		private EventConsumer finStateEvHandler;
 
 		public void setTimer(Timer timer) {
 			this.timer = timer;
@@ -53,26 +52,35 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 
 
 		/**
-		 * Use it only for logging or monitoring, if you're not happy with default behaviour.
+		 * Use it only for logging or monitoring, if you're not happy with the default behaviour.
 		 *
 		 * @param handler will be called for each event when final state reached.
 		 */
-		public void setFinalStateEventHandler(Consumer<Object> handler) {
-			this.eventConsumer = requireNonNull(handler);
+		public void setFinalStateHandler(EventConsumer handler) {
+			this.finStateEvHandler = requireNonNull(handler);
 		}
+	}
+
+	@FunctionalInterface
+	public interface EventConsumer {
+		/**
+		 * StateMachine is passed here only for printing or monitoring (toString()/associatedId() methods)
+		 */
+		void accept(StateMachine<?> m, Object event);
 	}
 
 	/**
-	 * This class exists to enforce the rule that the last statement in StateFunc must be {@code return goTo(...)}
+	 * This class only exists to enforce the rule that the last statement in a StateFunc must be {@code return goTo(...)}.
+	 * It guarantees that a StateFunc is always *explicitly* ended with transition to some new state.
 	 */
 	@SuppressWarnings("all")
 	protected static final class NextState {
+		private static final NextState VALUE = new NextState();
 		private NextState() {
 		}
 	}
+	private static final StateFunc FIN_STATE = ignored -> null;
 
-	private static final StateFunc FinalState = ignored -> null;
-	private final static NextState NextStateVal = new NextState();
 
 	@FunctionalInterface
 	protected interface StateFunc<E> {
@@ -82,7 +90,7 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	protected final Timer timer;
 	private final Enqueuer<E> enq;
 	private final CompletableFuture<?> finalStateReached = new CompletableFuture<>();
-	private final Consumer<Object> endStateEventConsumer;
+	private final EventConsumer finStateEvConsumer;
 
 	private StateFunc<E> state;
 	private CompletionStage<StateFunc<E>> nextAsync;
@@ -91,10 +99,13 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	protected StateMachine(Conf c) {
 		this.enq = Poller.newEnqueuer(this::pollAsync, c);
 		this.timer = c.timer;
-		this.state = initialState();
-		this.endStateEventConsumer = c.eventConsumer;
+		this.finStateEvConsumer = c.finStateEvHandler != null ? c.finStateEvHandler : StateMachine::handleFinalStateDefault;
 	}
 
+	/**
+	 * Descendants must implement this "getter". It must be side-effects free (as normally expected from getters)
+	 * @return
+	 */
 	protected abstract StateFunc<E> initialState();
 
 	/**
@@ -105,7 +116,7 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 		return finalState();
 	}
 	/**
-	 * Descendant classes may override this method to be public, or define their own business specific methods which call send().
+	 * Descendants may override this method to be public, or better define their own specific methods which call send() internally.
 	 */
 	protected void send(E event) throws RejectedExecutionException {
 		if (!enq.offer(event)) {
@@ -120,19 +131,18 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 
 	@SuppressWarnings("unchecked")
 	private CompletionStage<?> pollAsync(Queue<E> queue) {
-		StateFunc<E> state = this.state;
-		if (state == FinalState) {
-			handleFinalStateEvent(queue.poll());
+		StateFunc<E> stOrNull = this.state;
+		if (stOrNull == FIN_STATE) {
+			finStateEvConsumer.accept(this, queue.poll());
 			return null;
 		}
 
 		try {
-			NextState dummy = state.apply(queue.poll());
+			StateFunc<E> st = stOrNull != null ? stOrNull : initialState();
+			NextState dummy = st.apply(queue.poll());
 			requireNonNull(dummy, "StateFunc must end with \"return goTo(...) statement\"");
 		} catch (Throwable ex) {
-			if (tryRecover(ex) == FinalState) {
-				this.finalStateReached.completeExceptionally(ex);
-			}
+			tryRecover(ex);
 			return null;
 		}
 
@@ -145,43 +155,65 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	private final BiConsumer<StateFunc<E>, Throwable> nextAsyncCompletionHandler = (nextState, ex) -> {
 		if (nextState != null) {
 			this.state = nextState;
-			if (nextState == FinalState) {
-				this.finalStateReached.complete(null);
+			if (nextState == FIN_STATE) {
+				finalStateReached.complete(null);
 			}
 		} else {
-			Throwable ex1 = ex != null ? ex : new NullPointerException("BUG: nextState can't be null");
-			if (tryRecover(ex1) == FinalState) {
-				this.finalStateReached.completeExceptionally(ex1);
+			if (ex != null) {
+				tryRecover(ex);
+			} else {
+				this.state = FIN_STATE;
+				log.error(toString() + " BUG: nextState can't be null");
+				finalStateReached.completeExceptionally(new AssertionError("StateMachine impl. is broken: nextState can't be null"));
 			}
+
 		}
 	};
 
+	/**
+	 * Basic async transition: all other transitions are expressed in terms of this method.
+	 */
 	protected final NextState goTo(CompletionStage<StateFunc<E>> nextAsync) {
 		this.nextAsync = requireNonNull(nextAsync);
-		return NextStateVal;
+		return NextState.VALUE;
 	}
 
 
+	/**
+	 * Async transition, with delay after async computation.
+	 */
 	protected final NextState goTo(CompletionStage<StateFunc<E>> nextAsync, long delay, TimeUnit unit) {
 		requireNonNull(nextAsync);
 		return goTo(nextAsync.thenCompose(val -> timer.delayValue(val, delay, unit)));
 	}
 
+	/**
+	 * Async transition with delay after async computation.
+	 */
 	protected final NextState goTo(CompletionStage<StateFunc<E>> nextAsync, int delayMillis) {
 		requireNonNull(nextAsync);
 		return goTo(nextAsync, delayMillis, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * Sync transition with delay
+	 */
 	protected final NextState goTo(StateFunc<E> next, long delay, TimeUnit unit) {
 		requireNonNull(next);
 		return goTo(completedFuture(next), delay, unit);
 	}
 
+	/**
+	 * Sync transition with delay
+	 */
 	protected final NextState goTo(StateFunc<E> next, int delayMillis) {
 		requireNonNull(next);
 		return goTo(next, delayMillis, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * Sync transition
+	 */
 	protected final NextState goTo(StateFunc<E> next) {
 		requireNonNull(next);
 		return goTo(completedFuture(next));
@@ -193,33 +225,34 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 
 	@SuppressWarnings("unchecked")
 	protected final StateFunc<E> finalState() {
-		return FinalState;
+		return FIN_STATE;
 	}
 
-	public CompletionStage<?> finalStateReached() {
+	/**
+	 * Use async-methods of resultant CompletionStage (with custom executor) if you need lengthy/blocking processing of final-state-reached event!
+	 */
+	public final CompletionStage<?> finalStateReached() {
 		return finalStateReached;
 	}
 
-	private void handleFinalStateEvent(Object event) {
-		if (endStateEventConsumer == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("{} finished, event: {}", toString(), event);
-			}
-		} else {
-			endStateEventConsumer.accept(event);
+	private static void handleFinalStateDefault(StateMachine<?> m, Object event) {
+		if (log.isDebugEnabled()) {
+			log.debug("{} finished, event: {}", m.toString(), event);
 		}
 	}
 
-	private StateFunc<E> tryRecover(Throwable ex) {
+	private void tryRecover(Throwable ex) {
 		StateFunc<E> recState;
 		try {
 			recState = recover(ex);
 		} catch (Throwable e) {
-			log.error(toString() + ": BUG: recover() must never throw.", e);
+			log.error(toString() + ": BUG: recover() must never throw!", e);
 			recState = finalState();
 		}
 		this.state = recState;
-		return recState;
+		if (recState == FIN_STATE) {
+			finalStateReached.completeExceptionally(ex);
+		}
 	}
 
 }
