@@ -12,9 +12,14 @@ import java.util.function.Function;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This interface provides alternative ways (lambda-friendly) to create {@link Enqueuer} instances.
+ * This interface provides alternative ways to create {@link Enqueuer} instances i.e.
+ * thru lambdas instead of subclassing.
+ *
+ * Poller also provides handy polling adaptors: {@code pollByOne, pollByChunk} to avoid dealing with queues.
  *
  * @param <T>
+ * @see #pollByOne(Function) 
+ * @see #pollByChunk
  */
 @FunctionalInterface
 public interface Poller<T> {

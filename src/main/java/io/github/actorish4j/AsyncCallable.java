@@ -8,5 +8,5 @@ public interface AsyncCallable<T> {
 	/**
 	 * Must be non-blocking
 	 */
-	CompletionStage<T> callAcync();
+	CompletionStage<T> callAsync();
 }

@@ -82,6 +82,12 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	private static final StateFunc FIN_STATE = ignored -> null;
 
 
+	/**
+	 * Event handler for some state.
+	 * The state is identified only by its event handler, no other identities/names exist.
+	 * It must be ended with  {@code return goTo(...)} i.e. a jump to some state.
+	 * @param <E>
+	 */
 	@FunctionalInterface
 	protected interface StateFunc<E> {
 		NextState apply(E event);

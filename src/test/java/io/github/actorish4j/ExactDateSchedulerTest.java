@@ -3,9 +3,6 @@ package io.github.actorish4j;
 
 import io.github.actorish4j.applications.ExactDateScheduler;
 import org.testng.annotations.Test;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.*;

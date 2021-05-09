@@ -71,7 +71,7 @@ public final class TaskEnqueuer extends Enqueuer<AsyncRunnable> {
 		CompletableFuture<V> result = new CompletableFuture<>();
 		AsyncRunnable t = () -> {
 			try {
-				CompletionStage<V> acResult = ac.callAcync();
+				CompletionStage<V> acResult = ac.callAsync();
 				acResult.whenComplete((value, ex) -> {
 					if (ex == null) {
 						result.complete(value);

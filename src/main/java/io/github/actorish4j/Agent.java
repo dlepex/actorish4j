@@ -19,7 +19,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
  *
  * @param <S> state type. It's recommended for S to be immutable
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({"WeakerAccess"})
 public final class Agent<S> extends EnqueuerBasedEntity {
 
 	private final TaskEnqueuer enq;
