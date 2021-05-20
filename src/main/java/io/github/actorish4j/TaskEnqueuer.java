@@ -44,7 +44,7 @@ public final class TaskEnqueuer extends Enqueuer<AsyncRunnable> {
 	}
 
 	/**
-	 * This form of constructor can save you a few lines of code: you don't need to create configuration\ object yourself.
+	 * This constructor form can save you a few lines of code: you don't need to create configuration object yourself.
 	 */
 	public TaskEnqueuer(Consumer<Conf> configInit) {
 		this(ActorishUtil.with(newConf(), configInit));
@@ -108,9 +108,13 @@ public final class TaskEnqueuer extends Enqueuer<AsyncRunnable> {
 		}
 	}
 
+	/**
+	 * internal method, todo: exclude from docs.
+	 */
 	@Override
 	protected CompletionStage<?> pollAsync(Queue<AsyncRunnable> queue) {
-		return queue.poll().runAsync();
+		AsyncRunnable task = queue.poll();
+		return task != null ? task.runAsync() : null;
 	}
 
 	/**

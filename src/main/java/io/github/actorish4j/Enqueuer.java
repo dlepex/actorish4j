@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -41,29 +42,27 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	private final AtomicBoolean planned = new AtomicBoolean();
 	private final Runnable queuePollRunnable;
 	private final Object id;
-	private final Executor maybeSameThread;
+	private final Executor sameThreadOrPool;
 	private final Executor threadPool;
 
 	protected Enqueuer(Conf config) {
 		this(config.chooseQueueImpl(), config.threadPool, config.id, config.sameThreadOpt);
 	}
 
-	@SuppressWarnings("unchecked")
 	private Enqueuer(Queue<T> q, Executor threadPool, Object id, boolean sameThredOpt) {
 		this.queue = q;
 		this.id = id;
-		this.maybeSameThread = sameThredOpt ? sameThreadExecutor : threadPool;
+		this.sameThreadOrPool = sameThredOpt ? sameThreadExecutor : threadPool;
 		this.threadPool = threadPool;
 
-		BiConsumer pollNextIfExists = (ignored, ignored2) -> {
+		BiConsumer<Object, Throwable> pollNextIfExists = (ignored, ignored2) -> {
 			planned.set(false);
 			if (!queue.isEmpty()) {
-				planExecution(threadPool);
+				maybeSchedulePolling(this.threadPool);
 			}
 		};
 		this.queuePollRunnable = () -> doPollAsync().whenComplete(pollNextIfExists);
 	}
-
 
 	/**
 	 * This method just calls {@link Queue#offer(Object)}, and possibly schedules {@link #pollAsync(Queue)} execution.
@@ -71,16 +70,33 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * @return what {@link Queue#offer(Object)} returns, {@code false} means queue overflow for bounded queues. <p>
 	 * @see Queue#offer(Object)
 	 */
-	@SuppressWarnings("WeakerAccess")
 	public final boolean offer(T t) {
 		if (!queue.offer(t)) {
 			return false;
 		}
-		planExecution(maybeSameThread);
+		maybeSchedulePolling(sameThreadOrPool);
 		return true;
 	}
 
-	private void planExecution(Executor exec) {
+	/**
+	 * More efficient than repeated offer() calls for many items.
+	 * @return actual number of added items
+	 */
+	public final int offerMany(Iterable<? extends T> items) {
+		int added = 0;
+		for(T t: items) {
+			if (!queue.offer(t)) {
+				break;
+			}
+			added++;
+		}
+		if (added != 0) {
+			maybeSchedulePolling(sameThreadOrPool);
+		}
+		return added;
+	}
+
+	private void maybeSchedulePolling(Executor exec) {
 		if (planned.compareAndSet(false, true)) {
 			try {
 				exec.execute(queuePollRunnable);
@@ -103,8 +119,8 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	}
 
 	/**
-	 * This method will be scheduled for execution, only if the queue is not empty.
-	 * It means that at least one queue.poll() must return non-null.
+	 * This method will be scheduled for execution when the queue is not empty.
+	 * However, <b>queue non-emptiness pre-condition is best-efforts only</b>, so there is a very small chance that q.poll() returns null.
 	 * <p>
 	 * This method will NOT be called, UNTIL the resultant CompletionStage of the previous call is completed.
 	 * This property ensures that <b>concurrent (parallel) calls of this method are impossible</b>.
@@ -118,6 +134,10 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * <p>
 	 * You are free to call other methods of the queue in addition to poll().
 	 * <p>
+	 * Instead of implementing this method, it may be better to use polling adaptors from {@link Poller}.
+	 *
+	 * @see Poller#pollByChunk(int, Function) 
+	 * @see Poller#pollByOne(Function)
 	 */
 	protected abstract CompletionStage<?> pollAsync(Queue<T> queue);
 
@@ -149,9 +169,10 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 	 * Configuration object.
 	 * Most users will use either {@link #setBoundedQueue(int)} or {@link #setUnboundedQueue()} method <p>
 	 * <b>By default the queue is unbounded</b><p>
+	 *
+	 * Change thread pool setting if you are calling blocking API such JDBC in pollAsync().
 	 */
 	public static class Conf {
-
 
 		/**
 		 * @param capacity max queue size.
@@ -164,7 +185,6 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 				usePreallocatedQueue = true;
 			}
 			this.capacity = capacity;
-
 		}
 
 		/**
@@ -232,7 +252,7 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		/**
-		 * Most users should not be concerned with what this option does, the rest may read the code.
+		 * Disabling same-thread behaviour means that the polling task will always be executed at the thread pool.
 		 */
 		public void disableSameThreadOptimization() {
 			this.sameThreadOpt = false;
@@ -250,13 +270,14 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		private Object id;
 		private boolean usePreallocatedQueue;
 		private boolean sameThreadOpt = true;
-		private QueueFactory custom;
-		private UnaryOperator<Queue> wrapper;
+		private QueueFactory<?> custom;
+		private UnaryOperator<Queue<?>> wrapper;
 
+		@SuppressWarnings("all")
 		<T> Queue<T> chooseQueueImpl() {
-			QueueFactory custom = this.custom;
+			QueueFactory<?> custom = this.custom;
 			int cap = this.capacity;
-			if (custom != null) return wrap(Objects.requireNonNull(custom.create(cap), "custom queue can't be null."));
+			if (custom != null) return wrap(Objects.requireNonNull((Queue)custom.create(cap), "custom queue can't be null."));
 			boolean usePreallocatedQueue = this.usePreallocatedQueue;
 
 			if (usePreallocatedQueue && cap == 0) {
@@ -270,11 +291,10 @@ public abstract class Enqueuer<T> extends EnqueuerBasedEntity {
 		}
 
 		@SuppressWarnings("all")
-		private <T> Queue<T> wrap(Queue q) {
-			return wrapper == null ? q : Objects.requireNonNull(wrapper.apply(q), "queue wrapper can't return null");
+		private <T> Queue<T> wrap(Queue<T> q) {
+			return wrapper == null ? q : Objects.requireNonNull((Queue)wrapper.apply(q), "queue wrapper can't return null");
 		}
 	}
-
 
 	public interface QueueFactory<T> {
 		/**

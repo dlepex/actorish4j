@@ -49,17 +49,20 @@ public interface Poller<T> {
 	/**
 	 * Creates Poller that polls by one.
 	 */
-	static <T> Poller<T> pollByOne(Function<T, CompletionStage<?>> receiverFun) {
-		requireNonNull(receiverFun);
-		return q -> receiverFun.apply(q.poll());
+	static <T> Poller<T> pollByOne(Function<T, CompletionStage<?>> receiverFn) {
+		requireNonNull(receiverFn);
+		return q -> {
+			T item = q.poll();
+			return item != null ? receiverFn.apply(item) : null;
+		};
 	}
 
 	/**
 	 * Creates Poller that polls by chunk.
 	 */
-	static <T> Poller<T> pollByChunk(int maxChunkSize, Function<List<T>, CompletionStage<?>> receiverFun) {
+	static <T> Poller<T> pollByChunk(int maxChunkSize, Function<List<T>, CompletionStage<?>> receiverFn) {
 		if (maxChunkSize <= 0) throw new IllegalArgumentException();
-		requireNonNull(receiverFun);
+		requireNonNull(receiverFn);
 		ArrayList<T> chunk = new ArrayList<>();
 		return q -> {
 			chunk.clear();
@@ -70,7 +73,7 @@ public interface Poller<T> {
 					break;
 				}
 			}
-			return receiverFun.apply(chunk);
+			return !chunk.isEmpty() ? receiverFn.apply(chunk) : null;
 		};
 	}
 }

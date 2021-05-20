@@ -3,7 +3,6 @@ package io.github.actorish4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.RejectedExecutionException;
@@ -73,13 +72,12 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 	 * This class only exists to enforce the rule that the last statement in a StateFunc must be {@code return goTo(...)}.
 	 * It guarantees that a StateFunc is always *explicitly* ended with transition to some new state.
 	 */
-	@SuppressWarnings("all")
 	protected static final class NextState {
 		private static final NextState VALUE = new NextState();
 		private NextState() {
 		}
 	}
-	private static final StateFunc FIN_STATE = ignored -> null;
+	private static final StateFunc<?> FIN_STATE = ignored -> null;
 
 
 	/**
@@ -103,14 +101,13 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 
 
 	protected StateMachine(Conf c) {
-		this.enq = Poller.newEnqueuer(this::pollAsync, c);
+		this.enq = Poller.newEnqueuer(Poller.pollByOne(this::onEventPoll), c);
 		this.timer = c.timer;
 		this.finStateEvConsumer = c.finStateEvHandler != null ? c.finStateEvHandler : StateMachine::handleFinalStateDefault;
 	}
 
 	/**
 	 * Descendants must implement this "getter". It must be side-effects free (as normally expected from getters)
-	 * @return
 	 */
 	protected abstract StateFunc<E> initialState();
 
@@ -135,17 +132,16 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 		return enq;
 	}
 
-	@SuppressWarnings("unchecked")
-	private CompletionStage<?> pollAsync(Queue<E> queue) {
+	private CompletionStage<?> onEventPoll(E event) {
 		StateFunc<E> stOrNull = this.state;
 		if (stOrNull == FIN_STATE) {
-			finStateEvConsumer.accept(this, queue.poll());
+			finStateEvConsumer.accept(this, event);
 			return null;
 		}
 
 		try {
 			StateFunc<E> st = stOrNull != null ? stOrNull : initialState();
-			NextState dummy = st.apply(queue.poll());
+			NextState dummy = st.apply(event);
 			requireNonNull(dummy, "StateFunc must end with \"return goTo(...) statement\"");
 		} catch (Throwable ex) {
 			tryRecover(ex);
@@ -157,7 +153,6 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 		return nextAsync.whenComplete(nextAsyncCompletionHandler);
 	}
 
-	@SuppressWarnings("unchecked")
 	private final BiConsumer<StateFunc<E>, Throwable> nextAsyncCompletionHandler = (nextState, ex) -> {
 		if (nextState != null) {
 			this.state = nextState;
@@ -168,7 +163,7 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 			if (ex != null) {
 				tryRecover(ex);
 			} else {
-				this.state = FIN_STATE;
+				this.state = finalState();
 				log.error(toString() + " BUG: nextState can't be null");
 				finalStateReached.completeExceptionally(new AssertionError("StateMachine impl. is broken: nextState can't be null"));
 			}
@@ -229,9 +224,9 @@ public abstract class StateMachine<E> extends EnqueuerBasedEntity {
 		return state;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked"})
 	protected final StateFunc<E> finalState() {
-		return FIN_STATE;
+		return (StateFunc<E>) FIN_STATE;
 	}
 
 	/**

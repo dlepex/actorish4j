@@ -9,7 +9,7 @@ import java.util.concurrent.CompletionStage;
 @FunctionalInterface
 public interface AsyncRunnable {
 	/**
-	 * Must be non-blocking.
+	 * Must be non-blocking (usually, but it depends on chosen thread pool in Conf)
 	 * It may return null, which is interpreted the same as {@link java.util.concurrent.CompletableFuture#completedFuture(Object)} (immediate completion)
 	 */
 	CompletionStage<?> runAsync();
